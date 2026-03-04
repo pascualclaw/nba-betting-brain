@@ -1,0 +1,18 @@
+__pycache__/
+*.pyc
+*.pyo
+.env
+venv/
+
+# Large data files
+data/training_features.csv
+data/training_features.parquet
+data/nba_betting.db
+data/overnight_run.log
+
+# Trained models (large binaries)
+models/saved/*.pkl
+
+# Keep directory structure
+!models/saved/.gitkeep
+!data/.gitkeep

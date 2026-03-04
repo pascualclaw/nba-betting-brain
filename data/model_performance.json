@@ -1,0 +1,82 @@
+{
+  "baseline_avg224": {
+    "mae": 16.07,
+    "rmse": 20.31,
+    "direction_accuracy": 0.642,
+    "n_test_games": 5452,
+    "n_train_windows": 110,
+    "betting": {
+      "bets": 100,
+      "wins": 65,
+      "win_rate": 0.65,
+      "total_pnl": 2409.09,
+      "roi": 24.09
+    }
+  },
+  "combined_pts_avg": {
+    "mae": 15.23,
+    "rmse": 19.22,
+    "direction_accuracy": 0.645,
+    "n_test_games": 5452,
+    "n_train_windows": 110,
+    "betting": {
+      "bets": 89,
+      "wins": 59,
+      "win_rate": 0.663,
+      "total_pnl": 2363.64,
+      "roi": 26.56
+    }
+  },
+  "linear_ridge": {
+    "mae": 14.84,
+    "rmse": 18.74,
+    "direction_accuracy": 0.667,
+    "n_test_games": 5452,
+    "n_train_windows": 110,
+    "betting": {
+      "bets": 89,
+      "wins": 61,
+      "win_rate": 0.685,
+      "total_pnl": 2745.45,
+      "roi": 30.85
+    }
+  },
+  "gradient_boosting": {
+    "mae": 15.27,
+    "rmse": 19.25,
+    "direction_accuracy": 0.656,
+    "n_test_games": 5452,
+    "n_train_windows": 110,
+    "betting": {
+      "bets": 87,
+      "wins": 62,
+      "win_rate": 0.713,
+      "total_pnl": 3136.36,
+      "roi": 36.05
+    },
+    "feature_importance": {
+      "math_total_projection": 0.1848471858018085,
+      "pace_proxy_avg": 0.09858631232558787,
+      "h2h_total_avg": 0.07643068019133334,
+      "away_last5_pts_for": 0.07346670572469906,
+      "home_last5_pts_for": 0.07084620560752156,
+      "home_pts_against": 0.06574048184975209,
+      "away_net_rating": 0.058825170891813945,
+      "away_pts_against": 0.056441898593019874,
+      "home_pts_for": 0.053552770113282,
+      "net_rating_diff": 0.05352725846660396,
+      "away_pts_for": 0.04785124765744805,
+      "home_net_rating": 0.04486135081695077,
+      "combined_pts_avg": 0.04094013750041285,
+      "away_win_pct": 0.021716713799322288,
+      "home_win_pct": 0.020908079868475253,
+      "h2h_games": 0.017722789534282826,
+      "h2h_over220_rate": 0.013735011257685737
+    }
+  },
+  "_meta": {
+    "version": "v20260304_0844",
+    "trained_on": 5752,
+    "timestamp": "2026-03-04T08:44:54.055706"
+  }
+}

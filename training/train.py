@@ -31,10 +31,14 @@ from sklearn.linear_model import Ridge, Lasso
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
-import xgboost as xgb
+from sklearn.ensemble import HistGradientBoostingRegressor, GradientBoostingRegressor
 
 from database.db import get_connection
 from config import MODEL_SAVE_DIR, DB_PATH
+
+# Silence LightGBM verbosity
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning)
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
 log = logging.getLogger(__name__)
@@ -53,13 +57,13 @@ TARGET_MARGIN = "actual_home_margin"
 
 def load_feature_dataset() -> pd.DataFrame:
     """Load the pre-built feature dataset."""
-    path = Path(__file__).parent.parent / "data" / "training_features.parquet"
+    path = Path(__file__).parent.parent / "data" / "training_features.csv"
     if not path.exists():
         raise FileNotFoundError(
             f"Feature dataset not found at {path}\n"
             "Run: python training/historical_loader.py --seasons 5"
         )
-    df = pd.read_parquet(path)
+    df = pd.read_csv(path)
     df["date"] = pd.to_datetime(df["date"])
     df = df.sort_values("date").reset_index(drop=True)
     log.info(f"Loaded {len(df)} games from {df['date'].min().date()} to {df['date'].max().date()}")
@@ -149,18 +153,16 @@ def simulate_betting_roi(preds: list, actuals: list, line: float = 220.0,
 
 
 def train_final_model(df: pd.DataFrame) -> tuple:
-    """Train final XGBoost model on all data."""
+    """Train final GradientBoosting model on all data."""
     X = df[FEATURE_COLS].fillna(0).values
     y = df[TARGET_TOTAL].values
     
-    model = xgb.XGBRegressor(
+    model = GradientBoostingRegressor(
         n_estimators=200,
         max_depth=5,
         learning_rate=0.05,
         subsample=0.8,
-        colsample_bytree=0.8,
         random_state=42,
-        verbosity=0,
     )
     model.fit(X, y)
     
@@ -192,9 +194,9 @@ def generate_performance_report(results: dict, version: str) -> str:
             b = res["betting"]
             lines.append(f"**{model_name}:** {b['wins']}/{b['bets']} ({b['win_rate']*100:.1f}%) | ROI: {b['roi']}%")
     
-    if "xgboost" in results and "feature_importance" in results["xgboost"]:
+    if "gradient_boosting" in results and "feature_importance" in results["gradient_boosting"]:
         lines += ["", "## Top Predictive Features (XGBoost)", ""]
-        importance = results["xgboost"]["feature_importance"]
+        importance = results["gradient_boosting"]["feature_importance"]
         for i, (feat, imp) in enumerate(list(importance.items())[:10]):
             bar = "█" * int(imp * 100)
             lines.append(f"{i+1}. `{feat}`: {imp:.3f} {bar}")
@@ -250,11 +252,11 @@ def run_training():
         df, lambda: Pipeline([("scaler", StandardScaler()), ("model", Ridge(alpha=1.0))])
     )
     
-    # ── XGBoost ───────────────────────────────────────────
-    log.info("Training XGBoost...")
-    results["xgboost"] = walk_forward_evaluate(
-        df, lambda: xgb.XGBRegressor(n_estimators=100, max_depth=4,
-                                      learning_rate=0.1, random_state=42, verbosity=0)
+    # ── Gradient Boosting (sklearn, no OpenMP needed) ─────
+    log.info("Training Gradient Boosting...")
+    results["gradient_boosting"] = walk_forward_evaluate(
+        df, lambda: HistGradientBoostingRegressor(
+            max_iter=100, max_depth=4, learning_rate=0.1, random_state=42)
     )
     
     # Simulate betting ROI for each model
@@ -264,14 +266,14 @@ def run_training():
                 res["predictions"], res["actuals"]
             )
     
-    # ── Train final XGB on all data ────────────────────────
-    log.info("\nTraining final XGBoost model on all data...")
+    # ── Train final model on all data ────────────────────
+    log.info("\nTraining final Gradient Boosting model on all data...")
     final_model, importance = train_final_model(df)
-    results["xgboost"]["feature_importance"] = importance
+    results["gradient_boosting"]["feature_importance"] = importance
     
     # Save model
     MODEL_SAVE_DIR.mkdir(parents=True, exist_ok=True)
-    model_path = MODEL_SAVE_DIR / f"xgb_{version}.pkl"
+    model_path = MODEL_SAVE_DIR / f"gb_{version}.pkl"
     with open(model_path, "wb") as f:
         pickle.dump({"model": final_model, "feature_cols": FEATURE_COLS,
                      "version": version, "trained_on": len(df)}, f)

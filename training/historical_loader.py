@@ -295,7 +295,7 @@ def build_and_store_snapshots(all_games: list, conn: sqlite3.Connection):
             "team": game["home"],
             "is_home": 1,
             **snap["home_stats"],
-            **{f"h2h_{k}": v for k, v in snap["h2h_games"].items()},
+            **snap["h2h_games"],
         })
         # Store away team snapshot
         upsert_team_snapshot(conn, {
@@ -304,7 +304,7 @@ def build_and_store_snapshots(all_games: list, conn: sqlite3.Connection):
             "team": game["away"],
             "is_home": 0,
             **snap["away_stats"],
-            **{f"h2h_{k}": v for k, v in snap["h2h_games"].items()},
+            **snap["h2h_games"],
         })
         stored += 1
     
@@ -351,8 +351,8 @@ if __name__ == "__main__":
     snapshots = build_and_store_snapshots(all_games, conn)
     df = build_feature_dataset(all_games, snapshots)
     
-    output_path = Path(__file__).parent.parent / "data" / "training_features.parquet"
-    df.to_parquet(output_path, index=False)
-    log.info(f"\nSaved feature dataset: {output_path}")
+    output_path = Path(__file__).parent.parent / "data" / "training_features.csv"
+    df.to_csv(output_path, index=False)
+    log.info(f"\nSaved feature dataset: {output_path} ({len(df)} games)")
     log.info(f"Ready for model training. Run: python training/train.py")
     conn.close()
