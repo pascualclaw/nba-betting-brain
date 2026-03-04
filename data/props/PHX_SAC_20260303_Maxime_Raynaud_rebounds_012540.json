@@ -1,0 +1,17 @@
+{
+  "prop_id": "PHX_SAC_20260303_Maxime_Raynaud_rebounds_012540",
+  "game_code": "PHX_SAC_20260303",
+  "player": "Maxime Raynaud",
+  "prop_type": "rebounds",
+  "line": 9.5,
+  "direction": "over",
+  "odds": -110,
+  "confidence": 0.7,
+  "reasoning": "Only center for SAC with Sabonis+Cardwell both out. 13 boards vs LAL last game. PHX gives up 6th-most boards.",
+  "logged_at": "2026-03-04T01:25:40.622614",
+  "result": "WIN",
+  "actual_value": 10.0,
+  "hit": true,
+  "notes": "Raynaud finished with 10 rebounds. HIT \u2014 got the 2 boards needed in final 4 min.",
+  "scored_at": "2026-03-04T01:25:40.623156"
+}

@@ -1,0 +1,17 @@
+{
+  "prop_id": "PHX_SAC_20260303_PHX_Team_spread_012540",
+  "game_code": "PHX_SAC_20260303",
+  "player": "PHX Team",
+  "prop_type": "spread",
+  "line": 3.5,
+  "direction": "over",
+  "odds": -115,
+  "confidence": 0.82,
+  "reasoning": "PHX up 14 at time of bet, Booker back, clear talent advantage over 14-win SAC",
+  "logged_at": "2026-03-04T01:25:40.619933",
+  "result": "WIN",
+  "actual_value": 12.0,
+  "hit": true,
+  "notes": "PHX won by 12. Covered -3.5 easily.",
+  "scored_at": "2026-03-04T01:25:40.620747"
+}

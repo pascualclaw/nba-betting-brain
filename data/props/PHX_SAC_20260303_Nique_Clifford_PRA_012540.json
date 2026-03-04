@@ -1,0 +1,17 @@
+{
+  "prop_id": "PHX_SAC_20260303_Nique_Clifford_PRA_012540",
+  "game_code": "PHX_SAC_20260303",
+  "player": "Nique Clifford",
+  "prop_type": "PRA",
+  "line": 19.5,
+  "direction": "over",
+  "odds": -110,
+  "confidence": 0.55,
+  "reasoning": "Clifford at 19 PRA with 4:30 left in Q4. Only needed 1 more PRA.",
+  "logged_at": "2026-03-04T01:25:40.624266",
+  "result": "WIN",
+  "actual_value": 20.0,
+  "hit": true,
+  "notes": "HIT. Got the +1 PRA needed.",
+  "scored_at": "2026-03-04T01:25:40.624679"
+}
