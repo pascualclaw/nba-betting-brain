@@ -1,0 +1,37 @@
+{
+  "matchup": "CHA_vs_DAL",
+  "games": [
+    {
+      "game_id": "0022500883",
+      "game_code": "20260303/DALCHA",
+      "date": "2026-03-04",
+      "home": "CHA",
+      "away": "DAL",
+      "home_score": 117,
+      "away_score": 90,
+      "total": 207,
+      "winner": "CHA",
+      "quarters": {
+        "Q1": 54,
+        "Q2": 51,
+        "Q3": 59,
+        "Q4": 43
+      },
+      "avg_per_quarter": 51.75,
+      "hottest_quarter": "Q3"
+    }
+  ],
+  "stats": {
+    "games_played": 1,
+    "avg_total": 207.0,
+    "max_total": 207,
+    "min_total": 207,
+    "avg_Q1": 54.0,
+    "avg_Q2": 51.0,
+    "avg_Q3": 59.0,
+    "avg_Q4": 43.0,
+    "over_rate": 0.0,
+    "recent_3_avg": 207.0
+  },
+  "last_updated": "2026-03-04T00:57:04.813904"
+}

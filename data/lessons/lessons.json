@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "date": "2026-03-04",
+    "game_code": "PHX_SAC_20260303",
+    "category": "total_analysis",
+    "what_happened": "Recommended Under 217.5. Game went over \u2014 ended around 220-230.",
+    "why_it_failed": "Cited SAC team-wide Under trends without checking H2H history. Oct 22 PHX vs SAC went to 236 total. Q2 ran at 5.0 pts/min (62 combined). Didn't flag early enough when Q1 hit 52 combined.",
+    "fix_for_next_time": "1. ALWAYS pull H2H game totals for specific matchup before recommending over/under. 2. When Q1 exceeds 50 combined pts, flag Under as HIGH RISK immediately. 3. Do not rely on season-wide team trends \u2014 matchup-specific pace is more predictive. 4. Check if either team has a tendency to run hot in specific quarter matchups."
+  },
+  {
+    "id": 2,
+    "date": "2026-03-04",
+    "game_code": "PHX_SAC_20260303",
+    "category": "prop_analysis",
+    "what_happened": "Clifford 20+ PRA recommended. He had 2 pts in 24 min (PRA ~8 at that point).",
+    "why_it_failed": "Assumed hot streak would continue without checking Clifford's stats vs PHX specifically. Did not pull live box score mid-game \u2014 assumed he was performing instead of checking.",
+    "fix_for_next_time": "1. Pull live box score every time user asks for an update \u2014 never assume. 2. Check player prop hit rates in this SPECIFIC matchup, not just recent form. 3. For streak-based props, note that streaks can end in any game."
+  },
+  {
+    "id": 3,
+    "date": "2026-03-04",
+    "game_code": "PHX_SAC_20260303",
+    "category": "process",
+    "what_happened": "Did not flag cash-out opportunity when Under was still likely (around Q1 end).",
+    "why_it_failed": "No systematic trigger for flagging cash-out windows.",
+    "fix_for_next_time": "When a parlay leg (especially the total) starts trending bad, proactively mention the cash-out option and estimate EV of cashing vs riding."
+  }
+]

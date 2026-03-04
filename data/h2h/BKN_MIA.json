@@ -1,0 +1,37 @@
+{
+  "matchup": "MIA_vs_BKN",
+  "games": [
+    {
+      "game_id": "0022500886",
+      "game_code": "20260303/BKNMIA",
+      "date": "2026-03-04",
+      "home": "MIA",
+      "away": "BKN",
+      "home_score": 124,
+      "away_score": 98,
+      "total": 222,
+      "winner": "MIA",
+      "quarters": {
+        "Q1": 62,
+        "Q2": 61,
+        "Q3": 43,
+        "Q4": 56
+      },
+      "avg_per_quarter": 55.5,
+      "hottest_quarter": "Q1"
+    }
+  ],
+  "stats": {
+    "games_played": 1,
+    "avg_total": 222.0,
+    "max_total": 222,
+    "min_total": 222,
+    "avg_Q1": 62.0,
+    "avg_Q2": 61.0,
+    "avg_Q3": 43.0,
+    "avg_Q4": 56.0,
+    "over_rate": 1.0,
+    "recent_3_avg": 222.0
+  },
+  "last_updated": "2026-03-04T00:57:04.816625"
+}

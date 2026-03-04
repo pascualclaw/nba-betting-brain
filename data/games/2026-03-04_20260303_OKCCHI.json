@@ -1,0 +1,19 @@
+{
+  "game_id": "0022500889",
+  "game_code": "20260303/OKCCHI",
+  "date": "2026-03-04",
+  "home": "CHI",
+  "away": "OKC",
+  "home_score": 108,
+  "away_score": 116,
+  "total": 224,
+  "winner": "OKC",
+  "quarters": {
+    "Q1": 48,
+    "Q2": 61,
+    "Q3": 54,
+    "Q4": 61
+  },
+  "avg_per_quarter": 56.0,
+  "hottest_quarter": "Q2"
+}

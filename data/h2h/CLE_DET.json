@@ -1,0 +1,37 @@
+{
+  "matchup": "CLE_vs_DET",
+  "games": [
+    {
+      "game_id": "0022500884",
+      "game_code": "20260303/DETCLE",
+      "date": "2026-03-04",
+      "home": "CLE",
+      "away": "DET",
+      "home_score": 113,
+      "away_score": 109,
+      "total": 222,
+      "winner": "CLE",
+      "quarters": {
+        "Q1": 52,
+        "Q2": 50,
+        "Q3": 67,
+        "Q4": 53
+      },
+      "avg_per_quarter": 55.5,
+      "hottest_quarter": "Q3"
+    }
+  ],
+  "stats": {
+    "games_played": 1,
+    "avg_total": 222.0,
+    "max_total": 222,
+    "min_total": 222,
+    "avg_Q1": 52.0,
+    "avg_Q2": 50.0,
+    "avg_Q3": 67.0,
+    "avg_Q4": 53.0,
+    "over_rate": 1.0,
+    "recent_3_avg": 222.0
+  },
+  "last_updated": "2026-03-04T00:57:04.814943"
+}
