@@ -1,461 +1,358 @@
 """
-training/historical_loader.py — Loads historical NBA game data from NBA CDN.
+Historical data loader — pulls 5 seasons of NBA game data from NBA Stats API.
+Builds pre-game rolling stat snapshots for each game (no look-ahead bias).
 
-Covers up to 2 full NBA seasons. Resume-friendly: skips dates already in DB.
-Computes rolling team stats snapshots (ORTG/DRTG) as of each game date.
+Seasons: 2020-21, 2021-22, 2022-23, 2023-24, 2024-25, 2025-26
+~6,000+ games with full box scores and rolling team stats.
 
 Usage:
-    python -m training.historical_loader
-    python -m training.historical_loader --season 2024-25
-    python -m training.historical_loader --start 2025-10-28 --end 2026-03-04
+    python training/historical_loader.py --seasons 5
+    python training/historical_loader.py --seasons 1  # current season only
 """
-
-from __future__ import annotations
-
+import sys
+import time
+import json
+import sqlite3
 import argparse
 import logging
-import time
-from collections import defaultdict
-from datetime import date, datetime, timedelta
-from typing import Optional
+from pathlib import Path
+from datetime import datetime, timedelta
 
-import requests
-from rich.console import Console
-from rich.progress import (
-    BarColumn,
-    Progress,
-    SpinnerColumn,
-    TaskProgressColumn,
-    TextColumn,
-    TimeElapsedColumn,
-)
+import pandas as pd
+import numpy as np
+from nba_api.stats.endpoints import leaguegamelog, leaguedashteamstats
+from nba_api.stats.static import teams as nba_teams
 
-import config
-from database.db import DB
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from database.db import get_connection, upsert_game, upsert_team_snapshot
+from config import SEASONS, NBA_API_DELAY
 
-logger = logging.getLogger(__name__)
-console = Console()
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
+log = logging.getLogger(__name__)
 
-# ─── NBA CDN API helpers ───────────────────────────────────────────────────────
-
-NBA_SCHEDULE_TEMPLATE = (
-    "https://data.nba.com/data/10s/v2015/json/mobile_teams"
-    "/nba/{year}/league/00_full_schedule.json"
-)
-
-NBA_BOXSCORE_TEMPLATE = (
-    "https://cdn.nba.com/static/json/staticData/boxscore/BS_{game_id}.json"
-)
-
-NBA_SCOREBOARD_DATE_TEMPLATE = (
-    "https://stats.nba.com/stats/scoreboardV2?GameDate={date}&LeagueID=00&DayOffset=0"
-)
+# Team ID → tricode mapping
+_team_list = nba_teams.get_teams()
+TEAM_ID_TO_TRICODE = {t["id"]: t["abbreviation"] for t in _team_list}
+TRICODE_TO_ID = {t["abbreviation"]: t["id"] for t in _team_list}
 
 
-def _get(url: str, retries: int = 3, delay: float = 1.5) -> Optional[dict]:
-    """HTTP GET with retries and rate-limit courtesy delay."""
-    for attempt in range(retries):
-        try:
-            resp = requests.get(
-                url,
-                headers=config.NBA_STATS_HEADERS,
-                timeout=15,
-            )
-            if resp.status_code == 200:
-                return resp.json()
-            if resp.status_code == 429:
-                wait = delay * (attempt + 1) * 2
-                logger.warning("Rate limited. Waiting %.1fs …", wait)
-                time.sleep(wait)
-            else:
-                logger.debug("HTTP %s for %s", resp.status_code, url)
-        except requests.RequestException as exc:
-            logger.warning("Request failed (attempt %d): %s", attempt + 1, exc)
-            time.sleep(delay * (attempt + 1))
-    return None
-
-
-# ─── Fetch scoreboards by date ────────────────────────────────────────────────
-
-def fetch_scoreboard_for_date(game_date: str) -> list[dict]:
+def load_season_games(season: str) -> pd.DataFrame:
     """
-    Fetch all games played on `game_date` (YYYY-MM-DD) from stats.nba.com.
-    Returns a list of raw game dicts.
+    Load all games for a season from NBA Stats API.
+    season format: "2024-25"
+    Returns DataFrame with one row per game.
     """
-    url = NBA_SCOREBOARD_DATE_TEMPLATE.format(date=game_date)
-    data = _get(url)
-    if not data:
-        return []
+    log.info(f"Loading game log for {season}...")
+    gl = leaguegamelog.LeagueGameLog(
+        season=season,
+        season_type_all_star="Regular Season",
+        league_id="00",
+    )
+    df = gl.get_data_frames()[0]
+    time.sleep(NBA_API_DELAY)
 
-    # Parse the NBA stats API response format
-    games: list[dict] = []
-    try:
-        results = data.get("resultSets", [])
-        game_header = next(
-            (r for r in results if r["name"] == "GameHeader"), None
-        )
-        line_score = next(
-            (r for r in results if r["name"] == "LineScore"), None
-        )
-
-        if not game_header or not line_score:
-            return []
-
-        gh_headers = game_header["headers"]
-        gh_rows = game_header["rowSet"]
-        ls_headers = line_score["headers"]
-        ls_rows = line_score["rowSet"]
-
-        def to_dict(headers: list[str], row: list) -> dict:
-            return dict(zip(headers, row))
-
-        # Build line score lookup: game_id -> list of team rows
-        ls_by_game: dict[str, list[dict]] = defaultdict(list)
-        for row in ls_rows:
-            d = to_dict(ls_headers, row)
-            ls_by_game[d["GAME_ID"]].append(d)
-
-        for row in gh_rows:
-            gh = to_dict(gh_headers, row)
-            game_id = gh["GAME_ID"]
-            status_text = gh.get("GAME_STATUS_TEXT", "")
-
-            # Only process completed games
-            if "Final" not in status_text and gh.get("GAME_STATUS_ID") != 3:
-                continue
-
-            ls_teams = ls_by_game.get(game_id, [])
-            if len(ls_teams) < 2:
-                continue
-
-            # Identify home vs away by HOME_TEAM_ID
-            home_id = str(gh.get("HOME_TEAM_ID", ""))
-            away_id = str(gh.get("VISITOR_TEAM_ID", ""))
-
-            home_ls = next(
-                (t for t in ls_teams if str(t.get("TEAM_ID", "")) == home_id),
-                ls_teams[0],
-            )
-            away_ls = next(
-                (t for t in ls_teams if str(t.get("TEAM_ID", "")) == away_id),
-                ls_teams[1],
-            )
-
-            def safe_int(v: object) -> Optional[int]:
-                try:
-                    return int(v) if v is not None else None
-                except (TypeError, ValueError):
-                    return None
-
-            home_score = safe_int(home_ls.get("PTS"))
-            away_score = safe_int(away_ls.get("PTS"))
-            total = (
-                (home_score or 0) + (away_score or 0)
-                if home_score is not None and away_score is not None
-                else None
-            )
-
-            # Quarter scores
-            q1_home = safe_int(home_ls.get("PTS_QTR1"))
-            q1_away = safe_int(away_ls.get("PTS_QTR1"))
-            q1_total = (
-                (q1_home or 0) + (q1_away or 0)
-                if q1_home is not None and q1_away is not None
-                else None
-            )
-
-            # Determine season
-            season = _date_to_season(game_date)
-
-            games.append(
-                {
-                    "game_id": game_id,
-                    "date": game_date,
-                    "home": home_ls.get("TEAM_ABBREVIATION", ""),
-                    "away": away_ls.get("TEAM_ABBREVIATION", ""),
-                    "home_score": home_score,
-                    "away_score": away_score,
-                    "total": total,
-                    "q1_home": q1_home,
-                    "q1_away": q1_away,
-                    "q2_home": safe_int(home_ls.get("PTS_QTR2")),
-                    "q2_away": safe_int(away_ls.get("PTS_QTR2")),
-                    "q3_home": safe_int(home_ls.get("PTS_QTR3")),
-                    "q3_away": safe_int(away_ls.get("PTS_QTR3")),
-                    "q4_home": safe_int(home_ls.get("PTS_QTR4")),
-                    "q4_away": safe_int(away_ls.get("PTS_QTR4")),
-                    "ot_home": safe_int(home_ls.get("PTS_OT1", 0)) or 0,
-                    "ot_away": safe_int(away_ls.get("PTS_OT1", 0)) or 0,
-                    "q1_total": q1_total,
-                    "pace": None,
-                    "season": season,
-                    "status": "FINAL",
-                    "arena": gh.get("ARENA_NAME"),
-                    "is_neutral": 0,
-                }
-            )
-    except Exception as exc:
-        logger.error("Error parsing scoreboard for %s: %s", game_date, exc)
-
-    return games
+    # Keep relevant columns
+    cols = ["GAME_ID", "GAME_DATE", "TEAM_ID", "TEAM_ABBREVIATION",
+            "MATCHUP", "WL", "PTS", "PLUS_MINUS"]
+    df = df[cols].copy()
+    df["GAME_DATE"] = pd.to_datetime(df["GAME_DATE"])
+    df["season"] = season
+    return df
 
 
-def _date_to_season(date_str: str) -> str:
-    """Convert a date string to an NBA season label (e.g. '2025-10-29' → '2025-26')."""
-    d = datetime.strptime(date_str, "%Y-%m-%d").date()
-    # NBA season crosses year boundary: Oct-Jun
-    if d.month >= 10:
-        return f"{d.year}-{str(d.year + 1)[-2:]}"
-    else:
-        return f"{d.year - 1}-{str(d.year)[-2:]}"
-
-
-# ─── Rolling stats builder ────────────────────────────────────────────────────
-
-def _safe_div(num: float, den: float, default: float = 0.0) -> float:
-    return num / den if den != 0 else default
-
-
-def _compute_ortg(pts: float, possessions: float) -> float:
-    """Offensive rating = (PTS / possessions) * 100."""
-    return _safe_div(pts * 100.0, possessions, default=110.0)
-
-
-def _compute_drtg(opp_pts: float, opp_possessions: float) -> float:
-    """Defensive rating = (opp_PTS / opp_possessions) * 100."""
-    return _safe_div(opp_pts * 100.0, opp_possessions, default=110.0)
-
-
-def _estimate_possessions(pts: Optional[int], opp_pts: Optional[int]) -> float:
+def build_game_records(df: pd.DataFrame) -> list:
     """
-    Rough possession estimate when detailed box score isn't available.
-    Uses: possessions ≈ (pts + opp_pts) / 2 / (pts_per_100_poss / 100)
-    Simpler: assumes league avg ~113 pts per 100 possessions.
+    Convert game log (two rows per game — one per team) into one record per game.
+    Returns list of game dicts.
     """
-    if pts is None or opp_pts is None:
-        return 100.0
-    avg_pts = (pts + opp_pts) / 2.0
-    # NBA avg ~113 pts/100 poss → ~1.13 pts/poss
-    return avg_pts / 1.13
+    games = {}
+    for _, row in df.iterrows():
+        gid = row["GAME_ID"]
+        if gid not in games:
+            games[gid] = {"game_id": gid, "date": row["GAME_DATE"].strftime("%Y-%m-%d"),
+                          "season": row["season"], "home": None, "away": None,
+                          "home_score": 0, "away_score": 0}
+        is_home = "@" not in row["MATCHUP"] or row["MATCHUP"].startswith(row["TEAM_ABBREVIATION"])
+        # MATCHUP format: "PHX vs. SAC" (home) or "PHX @ SAC" (away)
+        matchup = row["MATCHUP"]
+        if " vs. " in matchup:
+            is_home = True
+        elif " @ " in matchup:
+            is_home = False
+        else:
+            is_home = True  # fallback
+
+        team = row["TEAM_ABBREVIATION"]
+        pts = int(row["PTS"]) if pd.notna(row["PTS"]) else 0
+
+        if is_home:
+            games[gid]["home"] = team
+            games[gid]["home_score"] = pts
+        else:
+            games[gid]["away"] = team
+            games[gid]["away_score"] = pts
+
+    records = []
+    for gid, g in games.items():
+        if g["home"] and g["away"]:
+            g["total"] = g["home_score"] + g["away_score"]
+            g["winner"] = g["home"] if g["home_score"] > g["away_score"] else g["away"]
+            g["home_margin"] = g["home_score"] - g["away_score"]
+            records.append(g)
+    return records
 
 
-def build_rolling_team_snapshots(
-    games: list[dict],
-    window: int = 20,
-    short_window: int = 10,
-) -> dict[str, dict]:
+def build_rolling_team_stats(games: list, window: int = 20) -> dict:
     """
-    Given a chronologically sorted list of completed games, compute
-    rolling ORTG/DRTG snapshots for each team as of each game date.
-
-    Returns: {team: {date: snapshot_dict}}
+    For each game, compute rolling team stats using only PRIOR games.
+    This is the key anti-look-ahead mechanism.
+    
+    Returns: {game_id: {home_stats: {...}, away_stats: {...}}}
     """
-    # team → list of (date, pts_for, pts_against, possessions)
-    team_games: dict[str, list[tuple]] = defaultdict(list)
-
-    for g in sorted(games, key=lambda x: x["date"]):
-        home, away = g["home"], g["away"]
-        hs, as_ = g.get("home_score"), g.get("away_score")
-        if hs is None or as_ is None:
-            continue
-        poss = _estimate_possessions(hs, as_)
-        team_games[home].append((g["date"], hs, as_, poss, g["game_id"]))
-        team_games[away].append((g["date"], as_, hs, poss, g["game_id"]))
-
-    snapshots: dict[str, dict[str, dict]] = {}
-
-    for team, history in team_games.items():
-        snapshots[team] = {}
-        for idx, (gdate, pts_for, pts_against, poss, game_id) in enumerate(history):
-            # Use games BEFORE this one (no look-ahead)
-            prior = history[:idx]
-            window_games = prior[-window:]
-            short_games = prior[-short_window:]
-
-            if not window_games:
-                snap = {
-                    "team": team, "date": gdate, "game_id": game_id,
-                    "ortg": 110.0, "drtg": 110.0, "pace": 98.0,
-                    "net_rtg": 0.0, "last_10_ortg": 110.0,
-                    "last_10_drtg": 110.0, "games_played": 0,
-                }
-            else:
-                total_pts_for = sum(w[1] for w in window_games)
-                total_pts_against = sum(w[2] for w in window_games)
-                total_poss = sum(w[3] for w in window_games)
-                n = len(window_games)
-
-                ortg = _compute_ortg(total_pts_for, total_poss)
-                drtg = _compute_drtg(total_pts_against, total_poss)
-                pace = _safe_div(total_poss * 48.0, n, default=98.0)
-
-                if short_games:
-                    s_pts_for = sum(w[1] for w in short_games)
-                    s_pts_against = sum(w[2] for w in short_games)
-                    s_poss = sum(w[3] for w in short_games)
-                    last_10_ortg = _compute_ortg(s_pts_for, s_poss)
-                    last_10_drtg = _compute_drtg(s_pts_against, s_poss)
-                else:
-                    last_10_ortg = ortg
-                    last_10_drtg = drtg
-
-                snap = {
-                    "team": team,
-                    "date": gdate,
-                    "game_id": game_id,
-                    "ortg": round(ortg, 2),
-                    "drtg": round(drtg, 2),
-                    "pace": round(pace, 2),
-                    "net_rtg": round(ortg - drtg, 2),
-                    "last_10_ortg": round(last_10_ortg, 2),
-                    "last_10_drtg": round(last_10_drtg, 2),
-                    "games_played": n,
-                }
-
-            snapshots[team][gdate] = snap
-
+    # Sort games chronologically
+    sorted_games = sorted(games, key=lambda g: g["date"])
+    
+    # Track per-team rolling data
+    team_history = {}  # team → list of (date, pts_for, pts_against, won)
+    
+    snapshots = {}
+    
+    for game in sorted_games:
+        gid = game["game_id"]
+        home, away = game["home"], game["away"]
+        
+        # Build snapshot BEFORE this game (using history up to but not including this game)
+        home_snap = compute_rolling_stats(team_history.get(home, []), window)
+        away_snap = compute_rolling_stats(team_history.get(away, []), window)
+        
+        snapshots[gid] = {
+            "home_stats": home_snap,
+            "away_stats": away_snap,
+            "h2h_games": get_h2h_from_history(home, away, team_history, window=5),
+        }
+        
+        # NOW update history with this game's result
+        for team, pts_for, pts_against, won in [
+            (home, game["home_score"], game["away_score"], game["home_score"] > game["away_score"]),
+            (away, game["away_score"], game["home_score"], game["away_score"] > game["home_score"]),
+        ]:
+            if team not in team_history:
+                team_history[team] = []
+            team_history[team].append({
+                "date": game["date"],
+                "pts_for": pts_for,
+                "pts_against": pts_against,
+                "total": game["total"],
+                "won": won,
+                "opponent": away if team == home else home,
+                "is_home": team == home,
+            })
+    
     return snapshots
 
 
-# ─── Main loader ───────────────────────────────────────────────────────────────
-
-def load_season(
-    season: str,
-    db: DB,
-    start_override: Optional[str] = None,
-    end_override: Optional[str] = None,
-    delay_between_dates: float = 0.5,
-) -> int:
-    """
-    Load all games for a given season from NBA CDN.
-
-    Args:
-        season: e.g. "2025-26"
-        db: Open DB connection
-        start_override: Override start date (YYYY-MM-DD)
-        end_override: Override end date (YYYY-MM-DD)
-        delay_between_dates: Seconds to wait between date requests
-
-    Returns:
-        Number of games loaded.
-    """
-    start_str = start_override or config.SEASON_START_DATES.get(season, "2025-10-28")
-    end_str = end_override or date.today().strftime("%Y-%m-%d")
-
-    start_dt = datetime.strptime(start_str, "%Y-%m-%d").date()
-    end_dt = datetime.strptime(end_str, "%Y-%m-%d").date()
-
-    total_days = (end_dt - start_dt).days + 1
-    all_dates = [
-        (start_dt + timedelta(days=i)).strftime("%Y-%m-%d")
-        for i in range(total_days)
-    ]
-
-    console.print(
-        f"[bold cyan]Loading {season}[/bold cyan]: {start_str} → {end_str} "
-        f"({total_days} days)"
-    )
-
-    games_loaded = 0
-    games_buffer: list[dict] = []
-
-    with Progress(
-        SpinnerColumn(),
-        TextColumn("[progress.description]{task.description}"),
-        BarColumn(),
-        TaskProgressColumn(),
-        TimeElapsedColumn(),
-        console=console,
-    ) as progress:
-        task = progress.add_task(f"Fetching {season} games…", total=len(all_dates))
-
-        for game_date in all_dates:
-            progress.update(task, description=f"Fetching {game_date}…")
-
-            # Skip if already loaded
-            if db.date_loaded(game_date, season):
-                progress.advance(task)
-                continue
-
-            games = fetch_scoreboard_for_date(game_date)
-
-            for game in games:
-                if not db.game_exists(game["game_id"]):
-                    db.upsert_game(game)
-                    games_buffer.append(game)
-                    games_loaded += 1
-
-            time.sleep(delay_between_dates)
-            progress.advance(task)
-
-    console.print(
-        f"  ✓ {games_loaded} new games loaded for [bold]{season}[/bold]"
-    )
-
-    # Build and store rolling snapshots
-    if games_buffer or True:  # always rebuild for loaded season
-        console.print("  ↻ Building rolling team stat snapshots…")
-        all_season_games = db.get_games_for_training(season)
-        snapshots = build_rolling_team_snapshots(
-            all_season_games,
-            window=config.TEAM_ROLLING_WINDOW,
-            short_window=10,
-        )
-
-        snap_count = 0
-        for team, date_snaps in snapshots.items():
-            for snap in date_snaps.values():
-                db.upsert_team_snapshot(snap)
-                snap_count += 1
-
-        console.print(
-            f"  ✓ {snap_count} team snapshots stored for [bold]{season}[/bold]"
-        )
-
-    return games_loaded
+def compute_rolling_stats(history: list, window: int = 20) -> dict:
+    """Compute rolling averages from team's recent game history."""
+    if not history:
+        return {
+            "pts_for_avg": 112.0, "pts_against_avg": 112.0,
+            "total_avg": 224.0, "net_rating": 0.0,
+            "pace_proxy": 100.0, "win_pct": 0.5,
+            "games": 0, "last5_pts_for": 112.0, "last5_pts_against": 112.0,
+        }
+    
+    recent = history[-window:]
+    last5 = history[-5:]
+    
+    pts_for = [g["pts_for"] for g in recent]
+    pts_against = [g["pts_against"] for g in recent]
+    totals = [g["total"] for g in recent]
+    
+    return {
+        "pts_for_avg": round(np.mean(pts_for), 1),
+        "pts_against_avg": round(np.mean(pts_against), 1),
+        "total_avg": round(np.mean(totals), 1),
+        "net_rating": round(np.mean(pts_for) - np.mean(pts_against), 2),
+        "pace_proxy": round(np.mean(totals) / 2.24, 1),  # proxy for pace
+        "win_pct": round(sum(g["won"] for g in recent) / len(recent), 3),
+        "games": len(history),
+        "last5_pts_for": round(np.mean([g["pts_for"] for g in last5]), 1) if last5 else 112.0,
+        "last5_pts_against": round(np.mean([g["pts_against"] for g in last5]), 1) if last5 else 112.0,
+    }
 
 
-def main() -> None:
-    """Entry point for CLI invocation."""
-    logging.basicConfig(
-        level=config.LOG_LEVEL,
-        format=config.LOG_FORMAT,
-        datefmt=config.LOG_DATE_FORMAT,
-    )
+def get_h2h_from_history(home: str, away: str, team_history: dict, window: int = 5) -> dict:
+    """Get H2H stats between two specific teams from history."""
+    home_hist = team_history.get(home, [])
+    h2h_games = [g for g in home_hist if g["opponent"] == away][-window:]
+    
+    if not h2h_games:
+        return {"h2h_total_avg": 224.0, "h2h_games": 0, "h2h_over220_rate": 0.5}
+    
+    totals = [g["total"] for g in h2h_games]
+    return {
+        "h2h_total_avg": round(np.mean(totals), 1),
+        "h2h_games": len(h2h_games),
+        "h2h_over220_rate": round(sum(1 for t in totals if t > 220) / len(totals), 2),
+    }
 
-    parser = argparse.ArgumentParser(
-        description="Load historical NBA game data into SQLite"
-    )
-    parser.add_argument(
-        "--season",
-        help="Season to load (e.g. 2025-26). Loads all configured seasons if omitted.",
-    )
-    parser.add_argument("--start", help="Override start date (YYYY-MM-DD)")
-    parser.add_argument("--end", help="Override end date (YYYY-MM-DD)")
-    parser.add_argument(
-        "--delay",
-        type=float,
-        default=0.5,
-        help="Seconds between date requests (default 0.5)",
-    )
-    args = parser.parse_args()
 
-    seasons = [args.season] if args.season else config.SEASONS
+def build_features(game: dict, snapshot: dict) -> dict:
+    """Convert a game + snapshot into ML feature vector."""
+    h = snapshot["home_stats"]
+    a = snapshot["away_stats"]
+    h2h = snapshot["h2h_games"]
+    
+    # Mathematical total projection
+    league_avg = 113.0
+    h_proj = (h["pts_for_avg"] * a["pts_against_avg"] / league_avg)
+    a_proj = (a["pts_for_avg"] * h["pts_against_avg"] / league_avg)
+    math_total = h_proj + a_proj
+    
+    return {
+        # Team quality features
+        "home_pts_for": h["pts_for_avg"],
+        "home_pts_against": h["pts_against_avg"],
+        "home_net_rating": h["net_rating"],
+        "home_win_pct": h["win_pct"],
+        "home_last5_pts_for": h["last5_pts_for"],
+        "home_games_played": h["games"],
+        "away_pts_for": a["pts_for_avg"],
+        "away_pts_against": a["pts_against_avg"],
+        "away_net_rating": a["net_rating"],
+        "away_win_pct": a["win_pct"],
+        "away_last5_pts_for": a["last5_pts_for"],
+        "away_games_played": a["games"],
+        # Matchup features
+        "math_total_projection": round(math_total, 1),
+        "pace_proxy_avg": round((h["pace_proxy"] + a["pace_proxy"]) / 2, 1),
+        "combined_pts_avg": round(h["pts_for_avg"] + a["pts_for_avg"], 1),
+        "net_rating_diff": round(h["net_rating"] - a["net_rating"], 2),
+        # H2H features
+        "h2h_total_avg": h2h["h2h_total_avg"],
+        "h2h_games": h2h["h2h_games"],
+        "h2h_over220_rate": h2h["h2h_over220_rate"],
+        # Target
+        "actual_total": game["total"],
+        "actual_home_margin": game.get("home_margin", 0),
+        "home_won": 1 if game["winner"] == game["home"] else 0,
+    }
 
-    with DB() as db:
-        total = 0
-        for season in seasons:
-            n = load_season(
-                season=season,
-                db=db,
-                start_override=args.start,
-                end_override=args.end,
-                delay_between_dates=args.delay,
-            )
-            total += n
 
-    console.print(f"\n[bold green]Done![/bold green] {total} total games loaded.")
+def load_and_store_seasons(seasons: list, conn: sqlite3.Connection):
+    """Full pipeline: load seasons → build snapshots → store to DB."""
+    all_games = []
+    
+    for season in seasons:
+        log.info(f"\n{'='*50}")
+        log.info(f"Processing season: {season}")
+        
+        # Check if already loaded
+        cursor = conn.execute("SELECT COUNT(*) FROM games WHERE season=?", (season,))
+        count = cursor.fetchone()[0]
+        if count > 500:
+            log.info(f"  Season {season} already loaded ({count} games). Skipping.")
+            # Load from DB instead
+            rows = conn.execute("SELECT * FROM games WHERE season=?", (season,)).fetchall()
+            for row in rows:
+                all_games.append(dict(zip([d[0] for d in conn.execute("SELECT * FROM games LIMIT 0").description], row)))
+            continue
+        
+        try:
+            df = load_season_games(season)
+            records = build_game_records(df)
+            log.info(f"  Loaded {len(records)} games")
+            
+            for game in records:
+                upsert_game(conn, game)
+            conn.commit()
+            all_games.extend(records)
+            log.info(f"  Saved to DB ✅")
+            time.sleep(1)  # Rate limiting
+        except Exception as e:
+            log.error(f"  Failed to load {season}: {e}")
+            continue
+    
+    return all_games
+
+
+def build_and_store_snapshots(all_games: list, conn: sqlite3.Connection):
+    """Build rolling pre-game snapshots for all games and store to DB."""
+    log.info(f"\nBuilding rolling snapshots for {len(all_games)} games...")
+    snapshots = build_rolling_team_stats(all_games, window=20)
+    
+    stored = 0
+    for game in all_games:
+        gid = game["game_id"]
+        if gid not in snapshots:
+            continue
+        snap = snapshots[gid]
+        
+        # Store home team snapshot
+        upsert_team_snapshot(conn, {
+            "game_id": gid,
+            "date": game["date"],
+            "team": game["home"],
+            "is_home": 1,
+            **snap["home_stats"],
+            **{f"h2h_{k}": v for k, v in snap["h2h_games"].items()},
+        })
+        # Store away team snapshot
+        upsert_team_snapshot(conn, {
+            "game_id": gid,
+            "date": game["date"],
+            "team": game["away"],
+            "is_home": 0,
+            **snap["away_stats"],
+            **{f"h2h_{k}": v for k, v in snap["h2h_games"].items()},
+        })
+        stored += 1
+    
+    conn.commit()
+    log.info(f"Stored {stored} game snapshots ✅")
+    return snapshots
+
+
+def build_feature_dataset(all_games: list, snapshots: dict) -> pd.DataFrame:
+    """Build the full ML feature dataset from all games and snapshots."""
+    rows = []
+    for game in all_games:
+        gid = game["game_id"]
+        if gid not in snapshots:
+            continue
+        # Skip games with insufficient history
+        snap = snapshots[gid]
+        if snap["home_stats"]["games"] < 5 or snap["away_stats"]["games"] < 5:
+            continue
+        features = build_features(game, snap)
+        features["game_id"] = gid
+        features["date"] = game["date"]
+        features["season"] = game.get("season", "")
+        features["home"] = game["home"]
+        features["away"] = game["away"]
+        rows.append(features)
+    
+    df = pd.DataFrame(rows)
+    log.info(f"Feature dataset: {len(df)} games, {len(df.columns)} columns")
+    return df
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="Load historical NBA data")
+    parser.add_argument("--seasons", type=int, default=3, help="Number of past seasons to load")
+    args = parser.parse_args()
+
+    from config import ALL_SEASONS, DB_PATH
+    seasons_to_load = ALL_SEASONS[-(args.seasons):]
+    log.info(f"Loading seasons: {seasons_to_load}")
+
+    conn = get_connection()
+    all_games = load_and_store_seasons(seasons_to_load, conn)
+    snapshots = build_and_store_snapshots(all_games, conn)
+    df = build_feature_dataset(all_games, snapshots)
+    
+    output_path = Path(__file__).parent.parent / "data" / "training_features.parquet"
+    df.to_parquet(output_path, index=False)
+    log.info(f"\nSaved feature dataset: {output_path}")
+    log.info(f"Ready for model training. Run: python training/train.py")
+    conn.close()
