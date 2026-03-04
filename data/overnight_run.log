@@ -31,3 +31,188 @@
 ==================================================
 2026-03-04 01:34:05,108 INFO Processing season: 2024-25
 2026-03-04 01:34:05,108 INFO Loading game log for 2024-25...
+2026-03-04 01:34:06,207 INFO   Loaded 1225 games
+2026-03-04 01:34:06,220 INFO   Saved to DB ✅
+2026-03-04 01:34:07,220 INFO 
+==================================================
+2026-03-04 01:34:07,220 INFO Processing season: 2025-26
+2026-03-04 01:34:07,221 INFO Loading game log for 2025-26...
+2026-03-04 01:34:08,028 INFO   Loaded 915 games
+2026-03-04 01:34:08,039 INFO   Saved to DB ✅
+2026-03-04 01:34:09,112 INFO 
+Building rolling snapshots for 5830 games...
+Traceback (most recent call last):
+  File "/Users/alexpascual/.openclaw/workspace/nba-betting-brain/training/historical_loader.py", line 351, in <module>
+    snapshots = build_and_store_snapshots(all_games, conn)
+  File "/Users/alexpascual/.openclaw/workspace/nba-betting-brain/training/historical_loader.py", line 292, in build_and_store_snapshots
+    upsert_team_snapshot(conn, {
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+        "game_id": gid,
+        ^^^^^^^^^^^^^^^
+    ...<4 lines>...
+        **{f"h2h_{k}": v for k, v in snap["h2h_games"].items()},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    })
+    ^^
+  File "/Users/alexpascual/.openclaw/workspace/nba-betting-brain/database/db.py", line 28, in upsert_team_snapshot
+    conn.execute("""
+    ~~~~~~~~~~~~^^^^
+        INSERT OR REPLACE INTO team_snapshots
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+                :h2h_total_avg, :h2h_games, :h2h_over220_rate)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    """, snap)
+    ^^^^^^^^^^
+sqlite3.ProgrammingError: You did not supply a value for binding parameter :h2h_total_avg.
+2026-03-04 01:34:11,740 ERROR ❌ Load Historical Data (5 seasons) failed (exit 1) in 14s
+2026-03-04 01:34:11,741 WARNING Retrying with 3 seasons...
+2026-03-04 01:34:11,741 INFO 
+============================================================
+2026-03-04 01:34:11,741 INFO STEP: Load Historical Data (3 seasons fallback)
+2026-03-04 01:34:11,741 INFO ============================================================
+2026-03-04 01:34:12,454 INFO Loading seasons: ['2023-24', '2024-25', '2025-26']
+2026-03-04 01:34:12,455 INFO 
+==================================================
+2026-03-04 01:34:12,455 INFO Processing season: 2023-24
+2026-03-04 01:34:12,455 INFO   Season 2023-24 already loaded (1230 games). Skipping.
+2026-03-04 01:34:12,488 INFO 
+==================================================
+2026-03-04 01:34:12,488 INFO Processing season: 2024-25
+2026-03-04 01:34:12,489 INFO   Season 2024-25 already loaded (1225 games). Skipping.
+2026-03-04 01:34:12,522 INFO 
+==================================================
+2026-03-04 01:34:12,523 INFO Processing season: 2025-26
+2026-03-04 01:34:12,523 INFO   Season 2025-26 already loaded (915 games). Skipping.
+2026-03-04 01:34:12,546 INFO 
+Building rolling snapshots for 3370 games...
+Traceback (most recent call last):
+  File "/Users/alexpascual/.openclaw/workspace/nba-betting-brain/training/historical_loader.py", line 351, in <module>
+    snapshots = build_and_store_snapshots(all_games, conn)
+  File "/Users/alexpascual/.openclaw/workspace/nba-betting-brain/training/historical_loader.py", line 292, in build_and_store_snapshots
+    upsert_team_snapshot(conn, {
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+        "game_id": gid,
+        ^^^^^^^^^^^^^^^
+    ...<4 lines>...
+        **{f"h2h_{k}": v for k, v in snap["h2h_games"].items()},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    })
+    ^^
+  File "/Users/alexpascual/.openclaw/workspace/nba-betting-brain/database/db.py", line 28, in upsert_team_snapshot
+    conn.execute("""
+    ~~~~~~~~~~~~^^^^
+        INSERT OR REPLACE INTO team_snapshots
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+                :h2h_total_avg, :h2h_games, :h2h_over220_rate)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    """, snap)
+    ^^^^^^^^^^
+sqlite3.ProgrammingError: You did not supply a value for binding parameter :h2h_total_avg.
+2026-03-04 01:34:14,057 ERROR ❌ Load Historical Data (3 seasons fallback) failed (exit 1) in 2s
+2026-03-04 01:34:14,058 INFO 
+============================================================
+2026-03-04 01:34:14,058 INFO STEP: Model Training + Backtesting
+2026-03-04 01:34:14,058 INFO ============================================================
+Traceback (most recent call last):
+  File "/Users/alexpascual/.openclaw/workspace/nba-betting-brain/training/train.py", line 34, in <module>
+    import xgboost as xgb
+  File "/Users/alexpascual/.openclaw/workspace/nba-betting-brain/venv/lib/python3.14/site-packages/xgboost/__init__.py", line 6, in <module>
+    from . import tracker  # noqa
+    ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/alexpascual/.openclaw/workspace/nba-betting-brain/venv/lib/python3.14/site-packages/xgboost/tracker.py", line 9, in <module>
+    from .core import _LIB, _check_call, _deprecate_positional_args, make_jcargs
+  File "/Users/alexpascual/.openclaw/workspace/nba-betting-brain/venv/lib/python3.14/site-packages/xgboost/core.py", line 309, in <module>
+    _LIB = _load_lib()
+  File "/Users/alexpascual/.openclaw/workspace/nba-betting-brain/venv/lib/python3.14/site-packages/xgboost/core.py", line 273, in _load_lib
+            raise XGBoostError(f"""
+    ...<11 lines>...
+    """)
+xgboost.core.XGBoostError: 
+XGBoost Library (libxgboost.dylib) could not be loaded.
+Likely causes:
+  * OpenMP runtime is not installed
+    - vcomp140.dll or libgomp-1.dll for Windows
+    - libomp.dylib for Mac OSX
+    - libgomp.so for Linux and other UNIX-like OSes
+    Mac OSX users: Run `brew install libomp` to install OpenMP runtime.
+
+  * You are running 32-bit Python on a 64-bit OS
+
+Error message(s): ["dlopen(/Users/alexpascual/.openclaw/workspace/nba-betting-brain/venv/lib/python3.14/site-packages/xgboost/lib/libxgboost.dylib, 0x0006): Library not loaded: @rpath/libomp.dylib\n  Referenced from: <5A4ADBF3-2060-3ECB-AB2B-F8A248DDA0A7> /Users/alexpascual/.openclaw/workspace/nba-betting-brain/venv/lib/python3.14/site-packages/xgboost/lib/libxgboost.dylib\n  Reason: tried: '/usr/local/opt/libomp/lib/libomp.dylib' (no such file), '/System/Volumes/Preboot/Cryptexes/OS/usr/local/opt/libomp/lib/libomp.dylib' (no such file), '/usr/local/opt/libomp/lib/libomp.dylib' (no such file), '/System/Volumes/Preboot/Cryptexes/OS/usr/local/opt/libomp/lib/libomp.dylib' (no such file), '/usr/local/lib/libomp.dylib' (no such file), '/System/Volumes/Preboot/Cryptexes/OS/usr/local/lib/libomp.dylib' (no such file), '/usr/local/lib/libomp.dylib' (no such file), '/System/Volumes/Preboot/Cryptexes/OS/usr/local/lib/libomp.dylib' (no such file)"]
+
+2026-03-04 01:35:14,864 ERROR ❌ Model Training + Backtesting failed (exit 1) in 61s
+2026-03-04 01:35:14,864 INFO 
+============================================================
+2026-03-04 01:35:14,865 INFO STEP: Daily Data Update
+2026-03-04 01:35:14,865 INFO ============================================================
+
+============================================================
+🏀 NBA BETTING BRAIN — Daily Update
+   2026-03-04 01:35 ET
+============================================================
+
+📡 Fetching scoreboard...
+   Final: 10 | Live: 0 | Upcoming: 0
+
+✅ Processing: DAL @ CHA — 90-117
+Saved game result: 2026-03-04_20260303_DALCHA.json
+Game 0022500883 already in H2H record.
+✅ Processing: DET @ CLE — 109-113
+Saved game result: 2026-03-04_20260303_DETCLE.json
+Game 0022500884 already in H2H record.
+✅ Processing: WAS @ ORL — 109-126
+Saved game result: 2026-03-04_20260303_WASORL.json
+Game 0022500885 already in H2H record.
+✅ Processing: BKN @ MIA — 98-124
+Saved game result: 2026-03-04_20260303_BKNMIA.json
+Game 0022500886 already in H2H record.
+✅ Processing: NYK @ TOR — 111-95
+Saved game result: 2026-03-04_20260303_NYKTOR.json
+Game 0022500887 already in H2H record.
+✅ Processing: SAS @ PHI — 131-91
+Saved game result: 2026-03-04_20260303_SASPHI.json
+Game 0022500888 already in H2H record.
+✅ Processing: OKC @ CHI — 116-108
+Saved game result: 2026-03-04_20260303_OKCCHI.json
+Game 0022500889 already in H2H record.
+✅ Processing: MEM @ MIN — 110-117
+Saved game result: 2026-03-04_20260303_MEMMIN.json
+Game 0022500890 already in H2H record.
+✅ Processing: NOP @ LAL — 101-110
+Saved game result: 2026-03-04_20260303_NOPLAL.json
+Updated H2H record for LAL vs NOP: 1 games total
+✅ Processing: PHX @ SAC — 114-103
+Saved game result: 2026-03-04_20260303_PHXSAC.json
+Updated H2H record for SAC vs PHX: 1 games total
+
+📊 Prop hit rates:
+   Overall: 4/4 (100%)
+   spread: 1/1 (100%)
+   PRA: 1/1 (100%)
+   rebounds: 1/1 (100%)
+   total: 1/1 (100%)
+
+📚 Most recent lessons:
+   [prop_analysis] Clifford 20+ PRA recommended. He had 2 pts in 24 min (PRA ~8 at that p...
+   → 1. Pull live box score every time user asks for an update — never assu...
+
+   [process] Did not flag cash-out opportunity when Under was still likely (around ...
+   → When a parlay leg (especially the total) starts trending bad, proactiv...
+
+   [win_analysis] Ticket 1 ($50 → +$212): PHX -3.5 ✅, Under 222.5 ✅, Clifford 15+ PRA ✅....
+   → Key takeaways from hits: 1. Prop legs on heavily shorthanded teams (Sa...
+
+============================================================
+✅ Daily update complete.
+============================================================
+
+2026-03-04 01:35:15,410 INFO ✅ Daily Data Update completed in 1s
+2026-03-04 01:35:15,410 INFO 
+============================================================
+2026-03-04 01:35:15,410 INFO OVERNIGHT RUN COMPLETE
+2026-03-04 01:35:15,410 INFO   Runtime: 1m 17s
+2026-03-04 01:35:15,410 INFO   Completed: ['daily_update']
+2026-03-04 01:35:15,410 INFO   Failed: ['historical_data', 'historical_data_fallback', 'model_training']
+2026-03-04 01:35:15,410 INFO ============================================================
