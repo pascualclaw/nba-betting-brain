@@ -1,0 +1,30 @@
+{
+  "injury_score": 14.77,
+  "injured_players": [
+    {
+      "player": "John Collins",
+      "status": "out",
+      "severity_weight": 1.0,
+      "avg_pts": 6.7,
+      "pts_share": 0.06,
+      "impact": 6.71
+    },
+    {
+      "player": "Sean Pedulla",
+      "status": "day-to-day",
+      "severity_weight": 0.2,
+      "avg_pts": 6.7,
+      "pts_share": 0.06,
+      "impact": 1.34
+    },
+    {
+      "player": "Bradley Beal",
+      "status": "out",
+      "severity_weight": 1.0,
+      "avg_pts": 6.7,
+      "pts_share": 0.06,
+      "impact": 6.71
+    }
+  ],
+  "team_avg_pts": 111.9
+}

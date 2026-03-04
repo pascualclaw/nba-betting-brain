@@ -1,0 +1,114 @@
+{
+  "game_id": "205af1eb3893119c935c720bddf95254",
+  "home_team": "Boston Celtics",
+  "away_team": "Charlotte Hornets",
+  "home_tricode": "BOS",
+  "away_tricode": "CHA",
+  "commence_time": "2026-03-05T00:40:00Z",
+  "open_total_line": 213.2,
+  "open_spread": -6.6,
+  "moneyline_home": -249.4,
+  "moneyline_away": 203.4,
+  "bookmakers": {
+    "fanduel": {
+      "moneyline_home": -255,
+      "moneyline_away": 210,
+      "home_spread": -6.5,
+      "home_spread_odds": -112,
+      "away_spread": 6.5,
+      "away_spread_odds": -108,
+      "total_line": 213.5,
+      "over_odds": -108,
+      "under_odds": -112
+    },
+    "draftkings": {
+      "moneyline_home": -238,
+      "moneyline_away": 195,
+      "home_spread": -6.5,
+      "home_spread_odds": -110,
+      "away_spread": 6.5,
+      "away_spread_odds": -110,
+      "total_line": 213.5,
+      "over_odds": -115,
+      "under_odds": -105
+    },
+    "lowvig": {
+      "moneyline_home": -236,
+      "moneyline_away": 201,
+      "home_spread": -6.5,
+      "home_spread_odds": -111,
+      "away_spread": 6.5,
+      "away_spread_odds": -101,
+      "total_line": 213.0,
+      "over_odds": -113,
+      "under_odds": -102
+    },
+    "betonlineag": {
+      "moneyline_home": -238,
+      "moneyline_away": 198,
+      "home_spread": -6.5,
+      "home_spread_odds": -115,
+      "away_spread": 6.5,
+      "away_spread_odds": -105,
+      "total_line": 213.0,
+      "over_odds": -115,
+      "under_odds": -105
+    },
+    "betmgm": {
+      "moneyline_home": -250,
+      "moneyline_away": 200,
+      "home_spread": -6.5,
+      "home_spread_odds": -115,
+      "away_spread": 6.5,
+      "away_spread_odds": -105,
+      "total_line": 213.5,
+      "over_odds": -110,
+      "under_odds": -110
+    },
+    "betrivers": {
+      "moneyline_home": -265,
+      "moneyline_away": 200,
+      "home_spread": -6.5,
+      "home_spread_odds": -114,
+      "away_spread": 6.5,
+      "away_spread_odds": -109,
+      "total_line": 212.5,
+      "over_odds": -113,
+      "under_odds": -110
+    },
+    "bovada": {
+      "moneyline_home": -260,
+      "moneyline_away": 215,
+      "home_spread": -6.5,
+      "home_spread_odds": -115,
+      "away_spread": 6.5,
+      "away_spread_odds": -105,
+      "total_line": 214.0,
+      "over_odds": -110,
+      "under_odds": -110
+    },
+    "betus": {
+      "moneyline_home": -240,
+      "moneyline_away": 203,
+      "home_spread": -7.0,
+      "home_spread_odds": -110,
+      "away_spread": 7.0,
+      "away_spread_odds": -110,
+      "total_line": 213.0,
+      "over_odds": -110,
+      "under_odds": -110
+    },
+    "mybookieag": {
+      "moneyline_home": -263,
+      "moneyline_away": 209,
+      "home_spread": -7.0,
+      "home_spread_odds": -110,
+      "away_spread": 7.0,
+      "away_spread_odds": -110,
+      "total_line": 213.0,
+      "over_odds": -110,
+      "under_odds": -110
+    }
+  },
+  "n_books": 9
+}

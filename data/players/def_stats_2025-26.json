@@ -1,0 +1,17 @@
+{
+  "teams": {
+    "": {
+      "opp_pts": 123.0,
+      "opp_reb": 47.9,
+      "opp_ast": 28.7,
+      "def_rating": 120.2,
+      "rank_pts_def": 1,
+      "rank_reb_def": 1,
+      "rank_ast_def": 1
+    }
+  },
+  "league_avg_pts": 123.0,
+  "league_avg_reb": 47.9,
+  "league_avg_ast": 28.7,
+  "_cached_at": 1772644462.312139
+}

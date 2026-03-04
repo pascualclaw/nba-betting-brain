@@ -1,0 +1,38 @@
+{
+  "injury_score": 21.89,
+  "injured_players": [
+    {
+      "player": "Deni Avdija",
+      "status": "out",
+      "severity_weight": 1.0,
+      "avg_pts": 6.8,
+      "pts_share": 0.06,
+      "impact": 6.84
+    },
+    {
+      "player": "Kris Murray",
+      "status": "day-to-day",
+      "severity_weight": 0.2,
+      "avg_pts": 6.8,
+      "pts_share": 0.06,
+      "impact": 1.37
+    },
+    {
+      "player": "Shaedon Sharpe",
+      "status": "out",
+      "severity_weight": 1.0,
+      "avg_pts": 6.8,
+      "pts_share": 0.06,
+      "impact": 6.84
+    },
+    {
+      "player": "Damian Lillard",
+      "status": "out",
+      "severity_weight": 1.0,
+      "avg_pts": 6.8,
+      "pts_share": 0.06,
+      "impact": 6.84
+    }
+  ],
+  "team_avg_pts": 114.0
+}

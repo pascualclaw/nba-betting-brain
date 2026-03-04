@@ -1,0 +1,22 @@
+{
+  "injury_score": 8.24,
+  "injured_players": [
+    {
+      "player": "Mitchell Robinson",
+      "status": "day-to-day",
+      "severity_weight": 0.2,
+      "avg_pts": 6.9,
+      "pts_share": 0.06,
+      "impact": 1.37
+    },
+    {
+      "player": "Miles McBride",
+      "status": "out",
+      "severity_weight": 1.0,
+      "avg_pts": 6.9,
+      "pts_share": 0.06,
+      "impact": 6.87
+    }
+  ],
+  "team_avg_pts": 114.5
+}

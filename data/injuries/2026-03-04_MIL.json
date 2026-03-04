@@ -1,0 +1,14 @@
+{
+  "injury_score": 6.52,
+  "injured_players": [
+    {
+      "player": "Taurean Prince",
+      "status": "out",
+      "severity_weight": 1.0,
+      "avg_pts": 6.5,
+      "pts_share": 0.06,
+      "impact": 6.52
+    }
+  ],
+  "team_avg_pts": 108.6
+}

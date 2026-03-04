@@ -1,0 +1,103 @@
+{
+  "game_id": "4a6dcac94e4279ba0acbd1f6376b6df2",
+  "home_team": "Los Angeles Clippers",
+  "away_team": "Indiana Pacers",
+  "home_tricode": "LAC",
+  "away_tricode": "IND",
+  "commence_time": "2026-03-05T03:40:00Z",
+  "open_total_line": 227.4,
+  "open_spread": -12.6,
+  "moneyline_home": -682.9,
+  "moneyline_away": 483.8,
+  "bookmakers": {
+    "fanduel": {
+      "moneyline_home": -770,
+      "moneyline_away": 540,
+      "home_spread": -12.5,
+      "home_spread_odds": -108,
+      "away_spread": 12.5,
+      "away_spread_odds": -112,
+      "total_line": 227.5,
+      "over_odds": -108,
+      "under_odds": -112
+    },
+    "mybookieag": {
+      "moneyline_home": -714,
+      "moneyline_away": 486,
+      "home_spread": -12.5,
+      "home_spread_odds": -110,
+      "away_spread": 12.5,
+      "away_spread_odds": -110,
+      "total_line": 227.5,
+      "over_odds": -110,
+      "under_odds": -110
+    },
+    "draftkings": {
+      "moneyline_home": -650,
+      "moneyline_away": 470,
+      "home_spread": -13.5,
+      "home_spread_odds": -105,
+      "away_spread": 13.5,
+      "away_spread_odds": -115,
+      "total_line": 226.5,
+      "over_odds": -112,
+      "under_odds": -108
+    },
+    "lowvig": {
+      "moneyline_home": -629,
+      "moneyline_away": 480,
+      "home_spread": -12.5,
+      "home_spread_odds": -101,
+      "away_spread": 12.5,
+      "away_spread_odds": -111,
+      "total_line": 227.5,
+      "over_odds": -107,
+      "under_odds": -107
+    },
+    "betonlineag": {
+      "moneyline_home": -640,
+      "moneyline_away": 469,
+      "home_spread": -12.5,
+      "home_spread_odds": -105,
+      "away_spread": 12.5,
+      "away_spread_odds": -115,
+      "total_line": 227.5,
+      "over_odds": -110,
+      "under_odds": -110
+    },
+    "betrivers": {
+      "moneyline_home": -770,
+      "moneyline_away": 480,
+      "home_spread": -12.5,
+      "home_spread_odds": -109,
+      "away_spread": 12.5,
+      "away_spread_odds": -114,
+      "total_line": 228.0,
+      "over_odds": -110,
+      "under_odds": -113
+    },
+    "betmgm": {
+      "moneyline_home": -650,
+      "moneyline_away": 475,
+      "home_spread": -12.5,
+      "home_spread_odds": -105,
+      "away_spread": 12.5,
+      "away_spread_odds": -115,
+      "total_line": 227.5,
+      "over_odds": -105,
+      "under_odds": -110
+    },
+    "betus": {
+      "moneyline_home": -640,
+      "moneyline_away": 470,
+      "home_spread": -12.5,
+      "home_spread_odds": -110,
+      "away_spread": 12.5,
+      "away_spread_odds": -110,
+      "total_line": 227.0,
+      "over_odds": -110,
+      "under_odds": -110
+    }
+  },
+  "n_books": 8
+}

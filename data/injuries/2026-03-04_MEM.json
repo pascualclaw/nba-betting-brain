@@ -1,0 +1,78 @@
+{
+  "injury_score": 45.94,
+  "injured_players": [
+    {
+      "player": "Scotty Pippen Jr.",
+      "status": "day-to-day",
+      "severity_weight": 0.2,
+      "avg_pts": 7.0,
+      "pts_share": 0.06,
+      "impact": 1.39
+    },
+    {
+      "player": "Ty Jerome",
+      "status": "day-to-day",
+      "severity_weight": 0.2,
+      "avg_pts": 7.0,
+      "pts_share": 0.06,
+      "impact": 1.39
+    },
+    {
+      "player": "Cedric Coward",
+      "status": "day-to-day",
+      "severity_weight": 0.2,
+      "avg_pts": 7.0,
+      "pts_share": 0.06,
+      "impact": 1.39
+    },
+    {
+      "player": "Zach Edey",
+      "status": "out",
+      "severity_weight": 1.0,
+      "avg_pts": 7.0,
+      "pts_share": 0.06,
+      "impact": 6.96
+    },
+    {
+      "player": "Santi Aldama",
+      "status": "out",
+      "severity_weight": 1.0,
+      "avg_pts": 7.0,
+      "pts_share": 0.06,
+      "impact": 6.96
+    },
+    {
+      "player": "Taj Gibson",
+      "status": "out",
+      "severity_weight": 1.0,
+      "avg_pts": 7.0,
+      "pts_share": 0.06,
+      "impact": 6.96
+    },
+    {
+      "player": "Brandon Clarke",
+      "status": "out",
+      "severity_weight": 1.0,
+      "avg_pts": 7.0,
+      "pts_share": 0.06,
+      "impact": 6.96
+    },
+    {
+      "player": "Kentavious Caldwell-Pope",
+      "status": "out",
+      "severity_weight": 1.0,
+      "avg_pts": 7.0,
+      "pts_share": 0.06,
+      "impact": 6.96
+    },
+    {
+      "player": "Ja Morant",
+      "status": "out",
+      "severity_weight": 1.0,
+      "avg_pts": 7.0,
+      "pts_share": 0.06,
+      "impact": 6.96
+    }
+  ],
+  "team_avg_pts": 116.0
+}

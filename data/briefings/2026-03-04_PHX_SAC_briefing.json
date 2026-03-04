@@ -1,0 +1,138 @@
+{
+  "generated_at": "2026-03-04T12:45:35.168735",
+  "game_date": "2026-03-04",
+  "home": "PHX",
+  "away": "SAC",
+  "odds": null,
+  "projection": {
+    "projected_total": 226.0,
+    "projected_spread": 0.0,
+    "confidence": "LOW",
+    "source": "math_fallback"
+  },
+  "injury_summary": {
+    "home_team": "PHX",
+    "away_team": "SAC",
+    "home_injuries": [],
+    "away_injuries": [],
+    "home_impact_pts": 0.0,
+    "away_impact_pts": 0.0,
+    "net_total_impact": 0.0,
+    "source": "unavailable"
+  },
+  "form": {
+    "PHX": {
+      "scores": [
+        114
+      ],
+      "avg": 114.0
+    },
+    "SAC": {
+      "scores": [
+        103
+      ],
+      "avg": 103.0
+    }
+  },
+  "h2h": {
+    "games": [
+      {
+        "game_id": "0022500892",
+        "game_code": "20260303/PHXSAC",
+        "date": "2026-03-04",
+        "home": "SAC",
+        "away": "PHX",
+        "home_score": 103,
+        "away_score": 114,
+        "total": 217,
+        "winner": "PHX",
+        "quarters": {
+          "Q1": 52,
+          "Q2": 62,
+          "Q3": 51,
+          "Q4": 52
+        },
+        "avg_per_quarter": 54.25,
+        "hottest_quarter": "Q2"
+      }
+    ],
+    "stats": {
+      "games_played": 1,
+      "avg_total": 217.0,
+      "max_total": 217,
+      "min_total": 217,
+      "avg_Q1": 52.0,
+      "avg_Q2": 62.0,
+      "avg_Q3": 51.0,
+      "avg_Q4": 52.0,
+      "over_rate": 0.0,
+      "recent_3_avg": 217.0
+    },
+    "source": "json_file"
+  },
+  "props": [
+    {
+      "prop_id": "PHX_SAC_20260303_Maxime_Raynaud_rebounds_012540",
+      "game_code": "PHX_SAC_20260303",
+      "player": "Maxime Raynaud",
+      "prop_type": "rebounds",
+      "line": 9.5,
+      "direction": "over",
+      "odds": -110,
+      "confidence": 0.7,
+      "reasoning": "Only center for SAC with Sabonis+Cardwell both out. 13 boards vs LAL last game. PHX gives up 6th-most boards.",
+      "logged_at": "2026-03-04T01:25:40.622614",
+      "result": "WIN",
+      "actual_value": 10.0,
+      "hit": true,
+      "notes": "Raynaud finished with 10 rebounds. HIT \u2014 got the 2 boards needed in final 4 min.",
+      "scored_at": "2026-03-04T01:25:40.623156"
+    },
+    {
+      "prop_id": "PHX_SAC_20260303_Nique_Clifford_PRA_012540",
+      "game_code": "PHX_SAC_20260303",
+      "player": "Nique Clifford",
+      "prop_type": "PRA",
+      "line": 19.5,
+      "direction": "over",
+      "odds": -110,
+      "confidence": 0.55,
+      "reasoning": "Clifford at 19 PRA with 4:30 left in Q4. Only needed 1 more PRA.",
+      "logged_at": "2026-03-04T01:25:40.624266",
+      "result": "WIN",
+      "actual_value": 20.0,
+      "hit": true,
+      "notes": "HIT. Got the +1 PRA needed.",
+      "scored_at": "2026-03-04T01:25:40.624679"
+    },
+    {
+      "prop_id": "PHX_SAC_20260303_PHX_SAC_Game_total_012540",
+      "game_code": "PHX_SAC_20260303",
+      "player": "PHX_SAC Game",
+      "prop_type": "total",
+      "line": 217.5,
+      "direction": "under",
+      "odds": -130,
+      "confidence": 0.35,
+      "reasoning": "Live bet \u2014 total at 204 with 4:30 left. Q4 running hot at 5.2 pts/min. Needed garbage time.",
+      "logged_at": "2026-03-04T01:25:40.623390",
+      "result": "WIN",
+      "actual_value": 217.0,
+      "hit": true,
+      "notes": "Final ~217. BARELY HIT. PHX blowout mode in final 3 min saved it. Q4 slowed.",
+      "scored_at": "2026-03-04T01:25:40.624013"
+    }
+  ],
+  "recommendations": {
+    "projected_total": 226.0,
+    "injury_adjusted_total": 226.0,
+    "total_rec": null,
+    "spread_rec": null,
+    "notes": [
+      "H2H avg total (217.0) differs from projection (226.0) by 9.0 pts"
+    ],
+    "total_summary": "Projected total: 226.0 pts (injury-adjusted: 226.0)",
+    "spread_summary": "Projected as even matchup"
+  },
+  "formatted_text": "\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\ud83c\udfc0 GAME BRIEFING: SAC @ PHX\n   2026-03-04 | DraftKings\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\n\ud83d\udcca MODEL PROJECTION\n   Projected total: 226.0 pts\n   Projected spread: EVEN\n   Confidence: LOW\n   Source: math_fallback\n\n\u26a0\ufe0f  INJURY IMPACT\n   SAC missing: none reported\n   PHX missing: none reported\n\n\ud83d\udcc8 RECENT FORM (last 5)\n   SAC: 103  avg=103.0\n   PHX: 114  avg=114.0\n\n\ud83e\udd1d H2H THIS SEASON\n   1 games: PHX 1-0 | Avg total: 217.0\n   Last: SAC 103-114 (total 217) \n\n\ud83d\udca1 TOP PROP OPPORTUNITIES\n   1. Maxime Raynaud 9.5+ REBOUNDS: predicted 9.5 | UNDER \ud83d\udcc9 (0.7 confidence)\n   2. Nique Clifford 19.5+ PRA: predicted 19.5 | UNDER \ud83d\udcc9 (0.55 confidence)\n   3. PHX_SAC Game 217.5+ TOTAL: predicted 217.5 | UNDER \ud83d\udcc9 (0.35 confidence)\n\n\ud83c\udfaf RECOMMENDATIONS\n   Total: Projected total: 226.0 pts (injury-adjusted: 226.0)\n   Spread: Projected as even matchup\n   \u26a0\ufe0f  H2H avg total (217.0) differs from projection (226.0) by 9.0 pts\n\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501"
+}

@@ -1,0 +1,114 @@
+{
+  "game_id": "e94b132f71de8a19ec817d79677921d9",
+  "home_team": "Milwaukee Bucks",
+  "away_team": "Atlanta Hawks",
+  "home_tricode": "MIL",
+  "away_tricode": "ATL",
+  "commence_time": "2026-03-05T02:40:00Z",
+  "open_total_line": 232.7,
+  "open_spread": -1.3,
+  "moneyline_home": -119.9,
+  "moneyline_away": 11.1,
+  "bookmakers": {
+    "fanduel": {
+      "moneyline_home": -118,
+      "moneyline_away": 102,
+      "home_spread": -1.0,
+      "home_spread_odds": -114,
+      "away_spread": 1.0,
+      "away_spread_odds": -106,
+      "total_line": 232.5,
+      "over_odds": -108,
+      "under_odds": -112
+    },
+    "draftkings": {
+      "moneyline_home": -118,
+      "moneyline_away": -102,
+      "home_spread": -1.5,
+      "home_spread_odds": -115,
+      "away_spread": 1.5,
+      "away_spread_odds": -105,
+      "total_line": 232.5,
+      "over_odds": -115,
+      "under_odds": -105
+    },
+    "lowvig": {
+      "moneyline_home": -117,
+      "moneyline_away": 101,
+      "home_spread": -1.5,
+      "home_spread_odds": -111,
+      "away_spread": 1.5,
+      "away_spread_odds": -101,
+      "total_line": 232.5,
+      "over_odds": -113,
+      "under_odds": -102
+    },
+    "betonlineag": {
+      "moneyline_home": -119,
+      "moneyline_away": -101,
+      "home_spread": -1.5,
+      "home_spread_odds": -115,
+      "away_spread": 1.5,
+      "away_spread_odds": -105,
+      "total_line": 232.5,
+      "over_odds": -115,
+      "under_odds": -105
+    },
+    "betmgm": {
+      "moneyline_home": -125,
+      "moneyline_away": 105,
+      "home_spread": -1.5,
+      "home_spread_odds": -115,
+      "away_spread": 1.5,
+      "away_spread_odds": -105,
+      "total_line": 233.5,
+      "over_odds": -105,
+      "under_odds": -115
+    },
+    "betrivers": {
+      "moneyline_home": -120,
+      "moneyline_away": -105,
+      "home_spread": -1.0,
+      "home_spread_odds": -113,
+      "away_spread": 1.0,
+      "away_spread_odds": -109,
+      "total_line": 232.0,
+      "over_odds": -113,
+      "under_odds": -109
+    },
+    "bovada": {
+      "moneyline_home": -115,
+      "moneyline_away": -105,
+      "home_spread": -1.0,
+      "home_spread_odds": -110,
+      "away_spread": 1.0,
+      "away_spread_odds": -110,
+      "total_line": 233.5,
+      "over_odds": -115,
+      "under_odds": -105
+    },
+    "betus": {
+      "moneyline_home": -125,
+      "moneyline_away": 105,
+      "home_spread": -1.5,
+      "home_spread_odds": -110,
+      "away_spread": 1.5,
+      "away_spread_odds": -110,
+      "total_line": 232.5,
+      "over_odds": -110,
+      "under_odds": -110
+    },
+    "mybookieag": {
+      "moneyline_home": -122,
+      "moneyline_away": 100,
+      "home_spread": -1.5,
+      "home_spread_odds": -110,
+      "away_spread": 1.5,
+      "away_spread_odds": -110,
+      "total_line": 232.5,
+      "over_odds": -110,
+      "under_odds": -110
+    }
+  },
+  "n_books": 9
+}

@@ -1,0 +1,14 @@
+{
+  "injury_score": 6.62,
+  "injured_players": [
+    {
+      "player": "Jayson Tatum",
+      "status": "out",
+      "severity_weight": 1.0,
+      "avg_pts": 6.6,
+      "pts_share": 0.06,
+      "impact": 6.62
+    }
+  ],
+  "team_avg_pts": 110.4
+}

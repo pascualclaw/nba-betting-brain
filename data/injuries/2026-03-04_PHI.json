@@ -1,0 +1,38 @@
+{
+  "injury_score": 16.49,
+  "injured_players": [
+    {
+      "player": "Kelly Oubre Jr.",
+      "status": "day-to-day",
+      "severity_weight": 0.2,
+      "avg_pts": 6.9,
+      "pts_share": 0.06,
+      "impact": 1.37
+    },
+    {
+      "player": "VJ Edgecombe",
+      "status": "day-to-day",
+      "severity_weight": 0.2,
+      "avg_pts": 6.9,
+      "pts_share": 0.06,
+      "impact": 1.37
+    },
+    {
+      "player": "Johni Broome",
+      "status": "out",
+      "severity_weight": 1.0,
+      "avg_pts": 6.9,
+      "pts_share": 0.06,
+      "impact": 6.87
+    },
+    {
+      "player": "Joel Embiid",
+      "status": "out",
+      "severity_weight": 1.0,
+      "avg_pts": 6.9,
+      "pts_share": 0.06,
+      "impact": 6.87
+    }
+  ],
+  "team_avg_pts": 114.5
+}

@@ -1,0 +1,22 @@
+{
+  "injury_score": 2.76,
+  "injured_players": [
+    {
+      "player": "Grant Williams",
+      "status": "day-to-day",
+      "severity_weight": 0.2,
+      "avg_pts": 6.9,
+      "pts_share": 0.06,
+      "impact": 1.38
+    },
+    {
+      "player": "Coby White",
+      "status": "day-to-day",
+      "severity_weight": 0.2,
+      "avg_pts": 6.9,
+      "pts_share": 0.06,
+      "impact": 1.38
+    }
+  ],
+  "team_avg_pts": 115.0
+}

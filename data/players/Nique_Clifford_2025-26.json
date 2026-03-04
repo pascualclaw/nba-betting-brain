@@ -1,0 +1,123 @@
+{
+  "player_name": "Nique Clifford",
+  "player_id": 1642363,
+  "season": "2025-26",
+  "n_games": 10,
+  "pts_avg": 13.5,
+  "reb_avg": 5.5,
+  "ast_avg": 4.2,
+  "pra_avg": 23.2,
+  "min_avg": 35.2,
+  "pts_std": 8.28,
+  "reb_std": 2.32,
+  "ast_std": 1.99,
+  "pra_std": 9.1,
+  "pts_last5": 15.2,
+  "reb_last5": 6.2,
+  "ast_last5": 4.2,
+  "pra_last5": 25.6,
+  "hit_rate": 0.6,
+  "games": [
+    {
+      "date": "Mar 03, 2026",
+      "matchup": "SAC vs. PHX",
+      "wl": "L",
+      "minutes": 39.0,
+      "pts": 10,
+      "reb": 8,
+      "ast": 4,
+      "pra": 22
+    },
+    {
+      "date": "Mar 01, 2026",
+      "matchup": "SAC @ LAL",
+      "wl": "L",
+      "minutes": 42.0,
+      "pts": 26,
+      "reb": 7,
+      "ast": 4,
+      "pra": 37
+    },
+    {
+      "date": "Feb 26, 2026",
+      "matchup": "SAC @ DAL",
+      "wl": "W",
+      "minutes": 39.0,
+      "pts": 13,
+      "reb": 8,
+      "ast": 7,
+      "pra": 28
+    },
+    {
+      "date": "Feb 25, 2026",
+      "matchup": "SAC @ HOU",
+      "wl": "L",
+      "minutes": 29.0,
+      "pts": 15,
+      "reb": 2,
+      "ast": 1,
+      "pra": 18
+    },
+    {
+      "date": "Feb 23, 2026",
+      "matchup": "SAC @ MEM",
+      "wl": "W",
+      "minutes": 28.0,
+      "pts": 12,
+      "reb": 6,
+      "ast": 5,
+      "pra": 23
+    },
+    {
+      "date": "Feb 21, 2026",
+      "matchup": "SAC @ SAS",
+      "wl": "L",
+      "minutes": 30.0,
+      "pts": 8,
+      "reb": 5,
+      "ast": 4,
+      "pra": 17
+    },
+    {
+      "date": "Feb 19, 2026",
+      "matchup": "SAC vs. ORL",
+      "wl": "L",
+      "minutes": 30.0,
+      "pts": 5,
+      "reb": 2,
+      "ast": 1,
+      "pra": 8
+    },
+    {
+      "date": "Feb 11, 2026",
+      "matchup": "SAC @ UTA",
+      "wl": "L",
+      "minutes": 38.0,
+      "pts": 6,
+      "reb": 8,
+      "ast": 6,
+      "pra": 20
+    },
+    {
+      "date": "Feb 09, 2026",
+      "matchup": "SAC @ NOP",
+      "wl": "L",
+      "minutes": 37.0,
+      "pts": 10,
+      "reb": 5,
+      "ast": 6,
+      "pra": 21
+    },
+    {
+      "date": "Feb 07, 2026",
+      "matchup": "SAC vs. CLE",
+      "wl": "L",
+      "minutes": 40.0,
+      "pts": 30,
+      "reb": 4,
+      "ast": 4,
+      "pra": 38
+    }
+  ],
+  "_cached_at": 1772644445.859638
+}

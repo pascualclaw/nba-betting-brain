@@ -1,0 +1,54 @@
+{
+  "injury_score": 30.33,
+  "injured_players": [
+    {
+      "player": "Isaiah Hartenstein",
+      "status": "day-to-day",
+      "severity_weight": 0.2,
+      "avg_pts": 6.9,
+      "pts_share": 0.06,
+      "impact": 1.38
+    },
+    {
+      "player": "Shai Gilgeous-Alexander",
+      "status": "day-to-day",
+      "severity_weight": 0.2,
+      "avg_pts": 6.9,
+      "pts_share": 0.06,
+      "impact": 1.38
+    },
+    {
+      "player": "Branden Carlson",
+      "status": "out",
+      "severity_weight": 1.0,
+      "avg_pts": 6.9,
+      "pts_share": 0.06,
+      "impact": 6.89
+    },
+    {
+      "player": "Ajay Mitchell",
+      "status": "out",
+      "severity_weight": 1.0,
+      "avg_pts": 6.9,
+      "pts_share": 0.06,
+      "impact": 6.89
+    },
+    {
+      "player": "Jalen Williams",
+      "status": "out",
+      "severity_weight": 1.0,
+      "avg_pts": 6.9,
+      "pts_share": 0.06,
+      "impact": 6.89
+    },
+    {
+      "player": "Thomas Sorber",
+      "status": "out",
+      "severity_weight": 1.0,
+      "avg_pts": 6.9,
+      "pts_share": 0.06,
+      "impact": 6.89
+    }
+  ],
+  "team_avg_pts": 114.9
+}

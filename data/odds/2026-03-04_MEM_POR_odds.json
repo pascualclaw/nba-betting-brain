@@ -1,0 +1,103 @@
+{
+  "game_id": "2a2434eaef59c9cbb34c5410c32f2529",
+  "home_team": "Memphis Grizzlies",
+  "away_team": "Portland Trail Blazers",
+  "home_tricode": "MEM",
+  "away_tricode": "POR",
+  "commence_time": "2026-03-05T01:10:00Z",
+  "open_total_line": 235.8,
+  "open_spread": 9.4,
+  "moneyline_home": 286.5,
+  "moneyline_away": -362.0,
+  "bookmakers": {
+    "fanduel": {
+      "moneyline_home": 290,
+      "moneyline_away": -360,
+      "home_spread": 9.0,
+      "home_spread_odds": -108,
+      "away_spread": -9.0,
+      "away_spread_odds": -112,
+      "total_line": 235.5,
+      "over_odds": -115,
+      "under_odds": -105
+    },
+    "draftkings": {
+      "moneyline_home": 280,
+      "moneyline_away": -355,
+      "home_spread": 9.5,
+      "home_spread_odds": -108,
+      "away_spread": -9.5,
+      "away_spread_odds": -112,
+      "total_line": 235.5,
+      "over_odds": -115,
+      "under_odds": -105
+    },
+    "betonlineag": {
+      "moneyline_home": 289,
+      "moneyline_away": -360,
+      "home_spread": 9.5,
+      "home_spread_odds": -105,
+      "away_spread": -9.5,
+      "away_spread_odds": -115,
+      "total_line": 236.0,
+      "over_odds": -110,
+      "under_odds": -110
+    },
+    "lowvig": {
+      "moneyline_home": 293,
+      "moneyline_away": -356,
+      "home_spread": 9.5,
+      "home_spread_odds": -101,
+      "away_spread": -9.5,
+      "away_spread_odds": -111,
+      "total_line": 236.0,
+      "over_odds": -107,
+      "under_odds": -107
+    },
+    "betrivers": {
+      "moneyline_home": 290,
+      "moneyline_away": -385,
+      "home_spread": 9.5,
+      "home_spread_odds": -113,
+      "away_spread": -9.5,
+      "away_spread_odds": -110,
+      "total_line": 235.5,
+      "over_odds": -112,
+      "under_odds": -112
+    },
+    "mybookieag": {
+      "moneyline_home": 285,
+      "moneyline_away": -370,
+      "home_spread": 9.5,
+      "home_spread_odds": -110,
+      "away_spread": -9.5,
+      "away_spread_odds": -110,
+      "total_line": 236.0,
+      "over_odds": -110,
+      "under_odds": -110
+    },
+    "betmgm": {
+      "moneyline_home": 275,
+      "moneyline_away": -350,
+      "home_spread": 9.5,
+      "home_spread_odds": -110,
+      "away_spread": -9.5,
+      "away_spread_odds": -110,
+      "total_line": 235.5,
+      "over_odds": -115,
+      "under_odds": -105
+    },
+    "betus": {
+      "moneyline_home": 290,
+      "moneyline_away": -360,
+      "home_spread": 9.5,
+      "home_spread_odds": -105,
+      "away_spread": -9.5,
+      "away_spread_odds": -115,
+      "total_line": 236.0,
+      "over_odds": -110,
+      "under_odds": -110
+    }
+  },
+  "n_books": 8
+}

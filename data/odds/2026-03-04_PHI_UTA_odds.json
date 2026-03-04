@@ -1,0 +1,114 @@
+{
+  "game_id": "417802e27d447db450466ad4fd7a4f8d",
+  "home_team": "Philadelphia 76ers",
+  "away_team": "Utah Jazz",
+  "home_tricode": "PHI",
+  "away_tricode": "UTA",
+  "commence_time": "2026-03-05T00:40:00Z",
+  "open_total_line": 237.9,
+  "open_spread": -8.6,
+  "moneyline_home": -386.8,
+  "moneyline_away": 300.0,
+  "bookmakers": {
+    "fanduel": {
+      "moneyline_home": -405,
+      "moneyline_away": 320,
+      "home_spread": -8.5,
+      "home_spread_odds": -110,
+      "away_spread": 8.5,
+      "away_spread_odds": -110,
+      "total_line": 237.5,
+      "over_odds": -114,
+      "under_odds": -106
+    },
+    "mybookieag": {
+      "moneyline_home": -385,
+      "moneyline_away": 287,
+      "home_spread": -8.5,
+      "home_spread_odds": -110,
+      "away_spread": 8.5,
+      "away_spread_odds": -110,
+      "total_line": 238.0,
+      "over_odds": -110,
+      "under_odds": -110
+    },
+    "draftkings": {
+      "moneyline_home": -380,
+      "moneyline_away": 300,
+      "home_spread": -8.5,
+      "home_spread_odds": -112,
+      "away_spread": 8.5,
+      "away_spread_odds": -108,
+      "total_line": 237.5,
+      "over_odds": -112,
+      "under_odds": -108
+    },
+    "lowvig": {
+      "moneyline_home": -371,
+      "moneyline_away": 304,
+      "home_spread": -8.5,
+      "home_spread_odds": -108,
+      "away_spread": 8.5,
+      "away_spread_odds": -104,
+      "total_line": 237.5,
+      "over_odds": -102,
+      "under_odds": -113
+    },
+    "betonlineag": {
+      "moneyline_home": -375,
+      "moneyline_away": 299,
+      "home_spread": -8.5,
+      "home_spread_odds": -112,
+      "away_spread": 8.5,
+      "away_spread_odds": -108,
+      "total_line": 237.5,
+      "over_odds": -105,
+      "under_odds": -115
+    },
+    "betmgm": {
+      "moneyline_home": -400,
+      "moneyline_away": 300,
+      "home_spread": -8.5,
+      "home_spread_odds": -110,
+      "away_spread": 8.5,
+      "away_spread_odds": -110,
+      "total_line": 237.5,
+      "over_odds": -110,
+      "under_odds": -110
+    },
+    "betus": {
+      "moneyline_home": -375,
+      "moneyline_away": 300,
+      "home_spread": -8.5,
+      "home_spread_odds": -110,
+      "away_spread": 8.5,
+      "away_spread_odds": -110,
+      "total_line": 237.5,
+      "over_odds": -105,
+      "under_odds": -115
+    },
+    "bovada": {
+      "moneyline_home": -430,
+      "moneyline_away": 320,
+      "home_spread": -9.5,
+      "home_spread_odds": -110,
+      "away_spread": 9.5,
+      "away_spread_odds": -110,
+      "total_line": 241.0,
+      "over_odds": -110,
+      "under_odds": -110
+    },
+    "betrivers": {
+      "moneyline_home": -360,
+      "moneyline_away": 270,
+      "home_spread": -8.5,
+      "home_spread_odds": -113,
+      "away_spread": 8.5,
+      "away_spread_odds": -110,
+      "total_line": 237.5,
+      "over_odds": -113,
+      "under_odds": -110
+    }
+  },
+  "n_books": 9
+}

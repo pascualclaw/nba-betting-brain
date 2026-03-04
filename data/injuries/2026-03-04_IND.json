@@ -1,0 +1,62 @@
+{
+  "injury_score": 36.61,
+  "injured_players": [
+    {
+      "player": "Ivica Zubac",
+      "status": "out",
+      "severity_weight": 1.0,
+      "avg_pts": 6.8,
+      "pts_share": 0.06,
+      "impact": 6.78
+    },
+    {
+      "player": "Obi Toppin",
+      "status": "day-to-day",
+      "severity_weight": 0.2,
+      "avg_pts": 6.8,
+      "pts_share": 0.06,
+      "impact": 1.36
+    },
+    {
+      "player": "Aaron Nesmith",
+      "status": "out",
+      "severity_weight": 1.0,
+      "avg_pts": 6.8,
+      "pts_share": 0.06,
+      "impact": 6.78
+    },
+    {
+      "player": "Pascal Siakam",
+      "status": "out",
+      "severity_weight": 1.0,
+      "avg_pts": 6.8,
+      "pts_share": 0.06,
+      "impact": 6.78
+    },
+    {
+      "player": "Andrew Nembhard",
+      "status": "day-to-day",
+      "severity_weight": 0.2,
+      "avg_pts": 6.8,
+      "pts_share": 0.06,
+      "impact": 1.36
+    },
+    {
+      "player": "Johnny Furphy",
+      "status": "out",
+      "severity_weight": 1.0,
+      "avg_pts": 6.8,
+      "pts_share": 0.06,
+      "impact": 6.78
+    },
+    {
+      "player": "Tyrese Haliburton",
+      "status": "out",
+      "severity_weight": 1.0,
+      "avg_pts": 6.8,
+      "pts_share": 0.06,
+      "impact": 6.78
+    }
+  ],
+  "team_avg_pts": 113.0
+}

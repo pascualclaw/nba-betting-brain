@@ -14,7 +14,9 @@ from collectors.nba_api import (
     get_player_stats, get_pace_analysis, save_game_result
 )
 from collectors.h2h_collector import add_game_to_h2h, compute_h2h_stats
+from collectors.daily_odds import run_daily_odds
 from trackers.prop_tracker import get_hit_rates, get_lessons
+from analyzers.prop_analyzer import analyze_props_for_game, print_prop_recs
 
 DATA_DIR = Path(__file__).parent / "data"
 
@@ -76,6 +78,13 @@ def run_daily_update():
         for g in upcoming:
             print(f"   {g['away_team']} @ {g['home_team']} — {g['status']}")
 
+    # 3b. Fetch and display today's betting lines
+    print(f"\n💰 Today's betting lines:")
+    try:
+        run_daily_odds()
+    except Exception as e:
+        print(f"   ⚠️  Could not fetch odds: {e}")
+
     # 4. Show current hit rates
     print(f"\n📊 Prop hit rates:")
     rates = get_hit_rates()
@@ -93,6 +102,31 @@ def run_daily_update():
         print(f"   [{l['category']}] {l['what_happened'][:70]}...")
         print(f"   → {l['fix_for_next_time'][:70]}...")
         print()
+
+    # 6. Today's top prop opportunities (upcoming games)
+    if upcoming:
+        print(f"\n🎯 Today's top prop opportunities:")
+        all_recs = []
+        for g in upcoming[:3]:  # Limit to first 3 upcoming games to avoid long runtime
+            try:
+                recs = analyze_props_for_game(
+                    home=g["home_team"],
+                    away=g["away_team"],
+                    date=datetime.now().strftime("%Y-%m-%d"),
+                    verbose=False,
+                )
+                all_recs.extend(recs)
+            except Exception as e:
+                print(f"   ⚠️  Props analysis failed for {g['away_team']} @ {g['home_team']}: {e}")
+        
+        if all_recs:
+            # Sort by confidence and show top 5
+            all_recs.sort(key=lambda x: x["confidence"], reverse=True)
+            print_prop_recs(all_recs[:5], "Today's Top 5 Prop Plays")
+        else:
+            print("   No high-confidence prop opportunities found.")
+    else:
+        print(f"\n   ℹ️  No upcoming games today — skipping prop analysis.")
 
     print(f"{'='*60}")
     print(f"✅ Daily update complete.")
