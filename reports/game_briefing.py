@@ -600,6 +600,51 @@ def format_briefing(
     except Exception:
         pass
 
+    # ── POSSESSIONS-BASED PROJECTION ────────────────
+    try:
+        from analyzers.four_factors import FourFactors
+        ff = FourFactors()
+        poss_proj = ff.project_game_total(home, away)
+        lines.append("⚡ POSSESSIONS MODEL")
+        lines.append(f"   Per-team poss: {poss_proj['expected_possessions']:.0f} | Projected total: {poss_proj['projected_total']} pts")
+        lines.append(f"   {home} pts: {poss_proj['pts_home']:.0f} | {away} pts: {poss_proj['pts_away']:.0f}")
+        lines.append(f"   Projected spread: {home} {poss_proj['projected_spread']:+.1f}")
+        lines.append(f"   Pace — {home}: {poss_proj['home_pace']/2:.0f} poss/gm | {away}: {poss_proj['away_pace']/2:.0f} poss/gm")
+        lines.append("")
+    except Exception:
+        poss_proj = None
+
+    # ── EV ANALYSIS ─────────────────────────────────
+    try:
+        from analyzers.ev_calculator import EVCalculator
+        ev_calc = EVCalculator(bankroll=500.0)
+
+        if odds:
+            total_line = odds.get("total") or odds.get("total_line")
+            spread_line = odds.get("spread") or odds.get("home_spread")
+            model_total = (poss_proj["projected_total"] if poss_proj
+                           else projection.get("projected_total", 220))
+            model_spread = (poss_proj["projected_spread"] if poss_proj
+                            else projection.get("projected_spread", 0))
+
+            lines.append("💰 EXPECTED VALUE ANALYSIS")
+            if total_line:
+                ev_result = ev_calc.evaluate_total(float(total_line), model_total)
+                if ev_result["recommendation"] == "BET":
+                    lines.append(f"   ✅ TOTAL BET: {ev_result['direction']} {total_line} | EV: {ev_result['ev_pct']} | Kelly: ${ev_result['suggested_bet']:.0f}")
+                else:
+                    lines.append(f"   ⛔ TOTAL: {ev_result.get('reason', 'No edge')}")
+            if spread_line:
+                ev_spread = ev_calc.evaluate_spread(home, away, float(spread_line), model_spread)
+                if ev_spread["recommendation"] == "BET":
+                    lines.append(f"   ✅ SPREAD BET: {ev_spread['bet_team']} | EV: {ev_spread['ev_pct']} | Kelly: ${ev_spread['suggested_bet']:.0f}")
+                else:
+                    lines.append(f"   ⛔ SPREAD: {ev_spread.get('reason', 'No edge')}")
+            lines.append("   ⚠️  Only bet when EV ≥ 3%. Kelly sizing = optimal stake.")
+            lines.append("")
+    except Exception:
+        pass
+
     # ── RECOMMENDATIONS ──────────────────────────────
     lines.append("🎯 RECOMMENDATIONS")
     total_line_val = recs.get("total_rec", {})

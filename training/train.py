@@ -59,6 +59,26 @@ FEATURE_COLS = [
     "home_injury_impact", "away_injury_impact",
     # Betting lines — NaN when unavailable; HistGradientBoosting handles natively
     "open_total_line", "close_total_line",
+    # ── Four Factors (Dean Oliver) — biggest model gap ──────────────────
+    # eFG%: shooting efficiency accounting for 3-pointers (weight: ~40% of wins)
+    "home_efg", "away_efg", "efg_diff",
+    # TOV%: turnover rate = wasted possessions (weight: ~25% of wins)
+    "home_tov_rate", "away_tov_rate", "tov_diff",
+    # ORB%: extra possessions from offensive rebounds (weight: ~20% of wins)
+    "home_orb_rate", "away_orb_rate", "orb_diff",
+    # FT Rate: free throw opportunities (weight: ~15% of wins)
+    "home_ft_rate", "away_ft_rate", "ft_rate_diff",
+    # Net Rating: ORTG - DRTG (opponent-adjusted efficiency)
+    "home_net_rtg", "away_net_rtg", "net_rtg_diff_ff",
+    # ── Variance metrics ─────────────────────────────────────────────────
+    "home_pts_std", "away_pts_std",
+    "home_pts_floor", "home_pts_ceiling",
+    "away_pts_floor", "away_pts_ceiling",
+    "home_momentum", "away_momentum",
+    "upset_risk_score",
+    # ── 3-point era features ─────────────────────────────────────────────
+    "home_3pa_rate", "away_3pa_rate",    # 3-point attempt rate
+    "home_3p_pct", "away_3p_pct",        # 3-point make %
 ]
 
 TARGET_TOTAL = "actual_total"

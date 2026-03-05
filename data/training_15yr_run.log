@@ -1,0 +1,119 @@
+2026-03-05 00:24:43,360 INFO Loading seasons: ['2010-11', '2011-12', '2012-13', '2013-14', '2014-15', '2015-16', '2016-17', '2017-18', '2018-19', '2019-20', '2020-21', '2021-22', '2022-23', '2023-24', '2024-25', '2025-26']
+2026-03-05 00:24:43,362 INFO 
+==================================================
+2026-03-05 00:24:43,362 INFO Processing season: 2010-11
+2026-03-05 00:24:43,363 INFO Loading game log for 2010-11...
+2026-03-05 00:24:47,921 INFO   Loaded 1230 games
+2026-03-05 00:24:47,946 INFO   Saved to DB ✅
+2026-03-05 00:24:49,058 INFO 
+==================================================
+2026-03-05 00:24:49,058 INFO Processing season: 2011-12
+2026-03-05 00:24:49,058 INFO Loading game log for 2011-12...
+2026-03-05 00:24:57,374 INFO   Loaded 990 games
+2026-03-05 00:24:57,386 INFO   Saved to DB ✅
+2026-03-05 00:24:58,455 INFO 
+==================================================
+2026-03-05 00:24:58,455 INFO Processing season: 2012-13
+2026-03-05 00:24:58,456 INFO Loading game log for 2012-13...
+2026-03-05 00:25:02,891 INFO   Loaded 1230 games
+2026-03-05 00:25:02,906 INFO   Saved to DB ✅
+2026-03-05 00:25:04,037 INFO 
+==================================================
+2026-03-05 00:25:04,037 INFO Processing season: 2013-14
+2026-03-05 00:25:04,038 INFO Loading game log for 2013-14...
+2026-03-05 00:25:09,540 INFO   Loaded 1230 games
+2026-03-05 00:25:09,553 INFO   Saved to DB ✅
+2026-03-05 00:25:10,694 INFO 
+==================================================
+2026-03-05 00:25:10,694 INFO Processing season: 2014-15
+2026-03-05 00:25:10,695 INFO Loading game log for 2014-15...
+2026-03-05 00:25:19,228 INFO   Loaded 1230 games
+2026-03-05 00:25:19,245 INFO   Saved to DB ✅
+2026-03-05 00:25:20,328 INFO 
+==================================================
+2026-03-05 00:25:20,328 INFO Processing season: 2015-16
+2026-03-05 00:25:20,329 INFO   Season 2015-16 already loaded (1230 games). Skipping.
+2026-03-05 00:25:20,363 INFO 
+==================================================
+2026-03-05 00:25:20,363 INFO Processing season: 2016-17
+2026-03-05 00:25:20,363 INFO   Season 2016-17 already loaded (1230 games). Skipping.
+2026-03-05 00:25:20,392 INFO 
+==================================================
+2026-03-05 00:25:20,392 INFO Processing season: 2017-18
+2026-03-05 00:25:20,392 INFO   Season 2017-18 already loaded (1230 games). Skipping.
+2026-03-05 00:25:20,421 INFO 
+==================================================
+2026-03-05 00:25:20,421 INFO Processing season: 2018-19
+2026-03-05 00:25:20,421 INFO Loading game log for 2018-19...
+2026-03-05 00:25:21,534 INFO   Loaded 1230 games
+2026-03-05 00:25:21,553 INFO   Saved to DB ✅
+2026-03-05 00:25:22,700 INFO 
+==================================================
+2026-03-05 00:25:22,700 INFO Processing season: 2019-20
+2026-03-05 00:25:22,700 INFO Loading game log for 2019-20...
+2026-03-05 00:25:23,837 INFO   Loaded 1059 games
+2026-03-05 00:25:23,854 INFO   Saved to DB ✅
+2026-03-05 00:25:24,911 INFO 
+==================================================
+2026-03-05 00:25:24,911 INFO Processing season: 2020-21
+2026-03-05 00:25:24,912 INFO Loading game log for 2020-21...
+2026-03-05 00:25:30,765 INFO   Loaded 1080 games
+2026-03-05 00:25:30,781 INFO   Saved to DB ✅
+2026-03-05 00:25:31,913 INFO 
+==================================================
+2026-03-05 00:25:31,913 INFO Processing season: 2021-22
+2026-03-05 00:25:31,913 INFO   Season 2021-22 already loaded (1230 games). Skipping.
+2026-03-05 00:25:31,942 INFO 
+==================================================
+2026-03-05 00:25:31,942 INFO Processing season: 2022-23
+2026-03-05 00:25:31,942 INFO   Season 2022-23 already loaded (1230 games). Skipping.
+2026-03-05 00:25:31,971 INFO 
+==================================================
+2026-03-05 00:25:31,971 INFO Processing season: 2023-24
+2026-03-05 00:25:31,971 INFO   Season 2023-24 already loaded (1230 games). Skipping.
+2026-03-05 00:25:32,001 INFO 
+==================================================
+2026-03-05 00:25:32,001 INFO Processing season: 2024-25
+2026-03-05 00:25:32,002 INFO   Season 2024-25 already loaded (1225 games). Skipping.
+2026-03-05 00:25:32,031 INFO 
+==================================================
+2026-03-05 00:25:32,031 INFO Processing season: 2025-26
+2026-03-05 00:25:32,031 INFO   Season 2025-26 already loaded (915 games). Skipping.
+2026-03-05 00:25:32,061 INFO 
+Building rolling snapshots for 18799 games...
+2026-03-05 00:25:43,310 INFO Stored 18799 game snapshots ✅
+2026-03-05 00:25:43,311 INFO Loaded home/away splits for 30 teams
+2026-03-05 00:25:44,206 INFO Feature dataset: 18708 games, 45 columns
+2026-03-05 00:25:44,224 INFO Joining odds data to features...
+2026-03-05 00:25:49,075 INFO Odds joined: 0/18708 games have a betting line.
+2026-03-05 00:25:49,664 INFO 
+Saved feature dataset: /Users/alexpascual/.openclaw/workspace/nba-betting-brain/data/training_features.csv (18708 games)
+2026-03-05 00:25:49,664 INFO Ready for model training. Run: python training/train.py
+NFO Processing season: 2021-22
+2026-03-05 00:25:26,791 INFO   Season 2021-22 already loaded (1230 games). Skipping.
+2026-03-05 00:25:26,836 INFO 
+==================================================
+2026-03-05 00:25:26,836 INFO Processing season: 2022-23
+2026-03-05 00:25:26,839 INFO   Season 2022-23 already loaded (1230 games). Skipping.
+2026-03-05 00:25:26,873 INFO 
+==================================================
+2026-03-05 00:25:26,873 INFO Processing season: 2023-24
+2026-03-05 00:25:26,876 INFO   Season 2023-24 already loaded (1230 games). Skipping.
+2026-03-05 00:25:26,907 INFO 
+==================================================
+2026-03-05 00:25:26,907 INFO Processing season: 2024-25
+2026-03-05 00:25:26,910 INFO   Season 2024-25 already loaded (1225 games). Skipping.
+2026-03-05 00:25:26,947 INFO 
+==================================================
+2026-03-05 00:25:26,947 INFO Processing season: 2025-26
+2026-03-05 00:25:26,949 INFO   Season 2025-26 already loaded (915 games). Skipping.
+2026-03-05 00:25:26,984 INFO 
+Building rolling snapshots for 18799 games...
+2026-03-05 00:25:38,616 INFO Stored 18799 game snapshots ✅
+2026-03-05 00:25:38,618 INFO Loaded home/away splits for 30 teams
+2026-03-05 00:25:39,384 INFO Feature dataset: 18708 games, 45 columns
+2026-03-05 00:25:39,397 INFO Joining odds data to features...
+2026-03-05 00:25:44,336 INFO Odds joined: 0/18708 games have a betting line.
+2026-03-05 00:25:44,921 INFO 
+Saved feature dataset: /Users/alexpascual/.openclaw/workspace/nba-betting-brain/data/training_features.csv (18708 games)
+2026-03-05 00:25:44,921 INFO Ready for model training. Run: python training/train.py
