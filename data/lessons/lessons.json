@@ -34,5 +34,14 @@
     "what_happened": "Ticket 1 ($50 \u2192 +$212): PHX -3.5 \u2705, Under 222.5 \u2705, Clifford 15+ PRA \u2705. Ticket 2 ($200 \u2192 +$1,500): Raynaud 10+ boards \u2705, Under 217.5 \u2705 (barely), Clifford 20+ PRA \u2705. Total profit: +$1,712 on $250 staked.",
     "why_it_failed": "N/A \u2014 both parlays hit.",
     "fix_for_next_time": "Key takeaways from hits: 1. Prop legs on heavily shorthanded teams (Sabonis+Murray+Hunter+LaVine all out) are high-value. 2. PHX blowout in Q4 was the saving grace on both unders \u2014 garbage time kills pace. 3. Don't cash out when 2 of 3 legs are already locked and the total has a buffer. 4. Clifford and Raynaud props were the right calls \u2014 matchup context (no bigs) was the edge."
+  },
+  {
+    "id": 5,
+    "date": "2026-03-04",
+    "game_code": "SGP_ATL_MIL_20260304",
+    "category": "prop_analysis",
+    "what_happened": "Took MIL ML + Giannis 40+ PRA SGP live at halftime (MIL up 5). Giannis had 22 PRA in only 14 of 24 possible first-half minutes. ATL surged in Q3, went up 14, Giannis got managed down the stretch. Final: ATL 112 MIL 98. Giannis ~28 PRA. Both legs dead.",
+    "why_it_failed": "3 compounding errors: 1) Ignored that Giannis only played 14/24 min in H1 \u2014 minutes management signal. 2) SGP ML+PRA has negative failure correlation: team losing = star plays less = both legs die simultaneously. 3) MIL +5 halftime is NOT a safe live ML threshold \u2014 1 possession game.",
+    "fix_for_next_time": "1. Flag if star played <65% of H1 minutes \u2014 high risk for large PRA props. 2. Never take ML+star PRA SGP unless team leads by 10+ (low blowout risk). 3. Live ML only when team leads by 8+ at half. 4. Check minutes management pattern in game notes before recommending prop."
   }
 ]
