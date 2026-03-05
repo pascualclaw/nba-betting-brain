@@ -182,32 +182,85 @@ def compute_rest_days(team: str, game_date: str, last_game_dates: dict) -> int:
 
 
 def compute_rolling_stats(history: list, window: int = 20) -> dict:
-    """Compute rolling averages from team's recent game history."""
+    """
+    Compute rolling averages + Four Factors estimates + variance metrics from team's recent history.
+    Uses only games BEFORE the target game (no look-ahead).
+    """
     if not history:
         return {
             "pts_for_avg": 112.0, "pts_against_avg": 112.0,
             "total_avg": 224.0, "net_rating": 0.0,
             "pace_proxy": 100.0, "win_pct": 0.5,
             "games": 0, "last5_pts_for": 112.0, "last5_pts_against": 112.0,
+            # Variance metrics
+            "pts_std_dev": 12.0, "pts_floor": 96.0, "pts_ceiling": 128.0,
+            "blowout_rate": 0.2, "momentum": 0.0,
+            # Four Factors (league average defaults)
+            "efg_pct": 0.530, "tov_rate": 0.130, "orb_rate": 0.280, "ft_rate": 0.240,
+            "ortg_est": 108.0, "drtg_est": 108.0,
         }
-    
+
     recent = history[-window:]
     last5 = history[-5:]
-    
+
     pts_for = [g["pts_for"] for g in recent]
     pts_against = [g["pts_against"] for g in recent]
     totals = [g["total"] for g in recent]
-    
+
+    avg_pts = np.mean(pts_for)
+    avg_opp = np.mean(pts_against)
+    avg_total = np.mean(totals)
+
+    # Variance metrics
+    pts_std = float(np.std(pts_for)) if len(pts_for) > 1 else 12.0
+    pts_floor = float(np.percentile(pts_for, 15)) if len(pts_for) > 3 else avg_pts - 15
+    pts_ceiling = float(np.percentile(pts_for, 85)) if len(pts_for) > 3 else avg_pts + 15
+    blowout_wins = sum(1 for g in recent if g["pts_for"] - g["pts_against"] > 15)
+    blowout_rate = blowout_wins / len(recent) if recent else 0.2
+
+    # Momentum: weighted avg of last 5 vs full window performance
+    last5_avg = np.mean([g["pts_for"] for g in last5]) if last5 else avg_pts
+    momentum = float(last5_avg - avg_pts)  # positive = team improving
+
+    # Four Factors approximations from scoring patterns
+    # These are best-guess estimates from aggregate data
+    # Real box-score scraping would improve these significantly
+    league_avg_pts = 108.0
+    pts_rel = (avg_pts - league_avg_pts) / 15.0  # normalized
+
+    efg_pct = min(0.60, max(0.48, 0.530 + pts_rel * 0.015))
+    tov_rate = min(0.17, max(0.09, 0.130 - pts_rel * 0.005))
+    orb_rate = 0.280  # league average (can't estimate from pts alone)
+    ft_rate = min(0.32, max(0.15, 0.240 + pts_rel * 0.01))
+
+    # ORTG/DRTG estimates (pts per 100 possessions)
+    pace_proxy = avg_total / 2.24  # NBA: avg ~2.24 pts per possession
+    ortg_est = (avg_pts / max(pace_proxy, 1)) * 100
+    drtg_est = (avg_opp / max(pace_proxy, 1)) * 100
+
     return {
-        "pts_for_avg": round(np.mean(pts_for), 1),
-        "pts_against_avg": round(np.mean(pts_against), 1),
-        "total_avg": round(np.mean(totals), 1),
-        "net_rating": round(np.mean(pts_for) - np.mean(pts_against), 2),
-        "pace_proxy": round(np.mean(totals) / 2.24, 1),  # proxy for pace
+        "pts_for_avg": round(avg_pts, 1),
+        "pts_against_avg": round(avg_opp, 1),
+        "total_avg": round(avg_total, 1),
+        "net_rating": round(avg_pts - avg_opp, 2),
+        "pace_proxy": round(pace_proxy, 1),
         "win_pct": round(sum(g["won"] for g in recent) / len(recent), 3),
         "games": len(history),
-        "last5_pts_for": round(np.mean([g["pts_for"] for g in last5]), 1) if last5 else 112.0,
-        "last5_pts_against": round(np.mean([g["pts_against"] for g in last5]), 1) if last5 else 112.0,
+        "last5_pts_for": round(np.mean([g["pts_for"] for g in last5]), 1) if last5 else avg_pts,
+        "last5_pts_against": round(np.mean([g["pts_against"] for g in last5]), 1) if last5 else avg_opp,
+        # Variance metrics (critical for ATS risk assessment)
+        "pts_std_dev": round(pts_std, 2),
+        "pts_floor": round(pts_floor, 1),
+        "pts_ceiling": round(pts_ceiling, 1),
+        "blowout_rate": round(blowout_rate, 3),
+        "momentum": round(momentum, 2),
+        # Four Factors (Dean Oliver framework)
+        "efg_pct": round(efg_pct, 3),
+        "tov_rate": round(tov_rate, 3),
+        "orb_rate": round(orb_rate, 3),
+        "ft_rate": round(ft_rate, 3),
+        "ortg_est": round(ortg_est, 1),
+        "drtg_est": round(drtg_est, 1),
     }
 
 
@@ -249,6 +302,19 @@ def build_features(game: dict, snapshot: dict) -> dict:
     home_injury_impact = snapshot.get("home_injury_impact", 0.0)
     away_injury_impact = snapshot.get("away_injury_impact", 0.0)
     
+    # Variance / ATS risk features
+    home_pts_std = h.get("pts_std_dev", 12.0)
+    away_pts_std = a.get("pts_std_dev", 12.0)
+    home_momentum = h.get("momentum", 0.0)
+    away_momentum = a.get("momentum", 0.0)
+
+    # Combined/differential variance features
+    upset_risk_score = (
+        (a["pts_for_avg"] - a["pts_against_avg"]) -  # away's ability to outscore
+        (h["pts_for_avg"] - h["pts_against_avg"]) +  # subtract home advantage
+        (away_momentum - home_momentum) * 0.5         # recency adjustment
+    )
+
     return {
         # Team quality features
         "home_pts_for": h["pts_for_avg"],
@@ -280,6 +346,42 @@ def build_features(game: dict, snapshot: dict) -> dict:
         # Injury impact features (0 for most historical, real values for recent/live)
         "home_injury_impact": home_injury_impact,
         "away_injury_impact": away_injury_impact,
+        # ── Four Factors (Dean Oliver) ──────────────────────────────────
+        "home_efg": h.get("efg_pct", 0.530),
+        "away_efg": a.get("efg_pct", 0.530),
+        "efg_diff": round(h.get("efg_pct", 0.530) - a.get("efg_pct", 0.530), 3),
+        "home_tov_rate": h.get("tov_rate", 0.130),
+        "away_tov_rate": a.get("tov_rate", 0.130),
+        "tov_diff": round(h.get("tov_rate", 0.130) - a.get("tov_rate", 0.130), 3),
+        "home_orb_rate": h.get("orb_rate", 0.280),
+        "away_orb_rate": a.get("orb_rate", 0.280),
+        "orb_diff": round(h.get("orb_rate", 0.280) - a.get("orb_rate", 0.280), 3),
+        "home_ft_rate": h.get("ft_rate", 0.240),
+        "away_ft_rate": a.get("ft_rate", 0.240),
+        "ft_rate_diff": round(h.get("ft_rate", 0.240) - a.get("ft_rate", 0.240), 3),
+        "home_net_rtg": h.get("ortg_est", 108.0) - h.get("drtg_est", 108.0),
+        "away_net_rtg": a.get("ortg_est", 108.0) - a.get("drtg_est", 108.0),
+        "net_rtg_diff_ff": round(
+            (h.get("ortg_est", 108.0) - h.get("drtg_est", 108.0)) -
+            (a.get("ortg_est", 108.0) - a.get("drtg_est", 108.0)), 2
+        ),
+        # ── Variance metrics ────────────────────────────────────────────
+        "home_pts_std": round(home_pts_std, 2),
+        "away_pts_std": round(away_pts_std, 2),
+        "home_pts_floor": h.get("pts_floor", h["pts_for_avg"] - 15),
+        "home_pts_ceiling": h.get("pts_ceiling", h["pts_for_avg"] + 15),
+        "away_pts_floor": a.get("pts_floor", a["pts_for_avg"] - 15),
+        "away_pts_ceiling": a.get("pts_ceiling", a["pts_for_avg"] + 15),
+        "home_momentum": round(home_momentum, 2),
+        "away_momentum": round(away_momentum, 2),
+        "upset_risk_score": round(upset_risk_score, 2),
+        "combined_std_dev": round(home_pts_std + away_pts_std, 2),
+        # ── 3-point era proxies ─────────────────────────────────────────
+        # Estimated from scoring efficiency (real values require box scores)
+        "home_3pa_rate": round(max(0.35, min(0.52, 0.42 + (h["pts_for_avg"] - 108) * 0.002)), 3),
+        "away_3pa_rate": round(max(0.35, min(0.52, 0.42 + (a["pts_for_avg"] - 108) * 0.002)), 3),
+        "home_3p_pct": round(max(0.32, min(0.42, 0.36 + (h["pts_for_avg"] - 108) * 0.001)), 3),
+        "away_3p_pct": round(max(0.32, min(0.42, 0.36 + (a["pts_for_avg"] - 108) * 0.001)), 3),
         # Target
         "actual_total": game["total"],
         "actual_home_margin": game.get("home_margin", 0),

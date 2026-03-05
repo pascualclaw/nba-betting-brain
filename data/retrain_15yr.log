@@ -1,0 +1,56 @@
+2026-03-05 01:09:32,533 INFO 
+============================================================
+2026-03-05 01:09:32,533 INFO 🏀 NBA BETTING BRAIN — Model Training v20260305_0109
+2026-03-05 01:09:32,533 INFO ============================================================
+
+2026-03-05 01:09:32,705 INFO Loaded 18708 games from 2010-11-05 to 2026-03-03
+2026-03-05 01:09:32,707 INFO Training on 18708 games across 16 seasons
+
+2026-03-05 01:09:32,707 INFO Evaluating baseline model...
+2026-03-05 01:09:34,585 INFO Evaluating combined pts model...
+2026-03-05 01:09:36,448 INFO Training linear regression...
+2026-03-05 01:09:41,183 INFO Training Gradient Boosting...
+  File "/Users/alexpascual/.openclaw/workspace/nba-betting-brain/venv/lib/python3.14/site-packages/joblib/externals/loky/backend/context.py", line 249, in _count_physical_cores
+    cpu_count_physical = _count_physical_cores_darwin()
+  File "/Users/alexpascual/.openclaw/workspace/nba-betting-brain/venv/lib/python3.14/site-packages/joblib/externals/loky/backend/context.py", line 312, in _count_physical_cores_darwin
+    cpu_info = subprocess.run(
+        "sysctl -n hw.physicalcpu".split(),
+        capture_output=True,
+        text=True,
+    )
+  File "/usr/local/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 554, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 1038, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        pass_fds, cwd, env,
+                        ^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+                        gid, gids, uid, umask,
+                        ^^^^^^^^^^^^^^^^^^^^^^
+                        start_new_session, process_group)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 1989, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+2026-03-05 01:10:57,708 INFO 
+Training final Gradient Boosting model on all data...
+2026-03-05 01:11:10,219 INFO Saved model: /Users/alexpascual/.openclaw/workspace/nba-betting-brain/models/saved/gb_v20260305_0109.pkl
+2026-03-05 01:11:10,229 INFO 
+============================================================
+2026-03-05 01:11:10,229 INFO RESULTS SUMMARY:
+2026-03-05 01:11:10,229 INFO ============================================================
+2026-03-05 01:11:10,229 INFO baseline_avg224           MAE:  20.5 pts | Dir: 39.3% | Edge: N/A | ROI: 24.09%
+2026-03-05 01:11:10,229 INFO combined_pts_avg          MAE:  15.0 pts | Dir: 70.9% | Edge: N/A | ROI: 26.56%
+2026-03-05 01:11:10,229 INFO linear_ridge              MAE:  14.7 pts | Dir: 71.9% | Edge: N/A | ROI: 27.27%
+2026-03-05 01:11:10,229 INFO gradient_boosting         MAE:  14.8 pts | Dir: 71.7% | Edge: N/A | ROI: 29.98%
+2026-03-05 01:11:10,229 INFO 
+Top features:
+2026-03-05 01:11:10,230 INFO   math_total_projection: 0.600
+2026-03-05 01:11:10,230 INFO   pace_proxy_avg: 0.143
+2026-03-05 01:11:10,230 INFO   h2h_total_avg: 0.031
+2026-03-05 01:11:10,230 INFO   home_last5_pts_for: 0.027
+2026-03-05 01:11:10,230 INFO   away_last5_pts_for: 0.025
+2026-03-05 01:11:10,230 INFO 
+✅ Training complete. Model saved: gb_v20260305_0109.pkl
+2026-03-05 01:11:10,230 INFO 📊 Report: PERFORMANCE.md

@@ -1,42 +1,43 @@
 # NBA Betting Brain — Model Performance
-**Version:** v20260304_0844 | **Generated:** 2026-03-04 08:44 ET
+**Version:** v20260305_0109 | **Generated:** 2026-03-05 01:11 ET
 
 ## Backtesting Results (Walk-Forward Validation)
 
-| Model | MAE (pts) | RMSE | Direction Accuracy | N Games |
-|-------|-----------|------|-------------------|---------|
-| baseline_avg224 | 16.07 | 20.31 | 64.2% | 5452 |
-| combined_pts_avg | 15.23 | 19.22 | 64.5% | 5452 |
-| linear_ridge | 14.84 | 18.74 | 66.7% | 5452 |
-| gradient_boosting | 15.27 | 19.25 | 65.6% | 5452 |
+| Model | MAE (pts) | RMSE | Direction Acc | Edge Acc (vs line) | N Games |
+|-------|-----------|------|---------------|--------------------|---------|
+| baseline_avg224 | 20.46 | 24.77 | 39.3% | N/A | 18408 |
+| combined_pts_avg | 15.02 | 18.99 | 70.9% | N/A | 18408 |
+| linear_ridge | 14.71 | 18.7 | 71.9% | N/A | 18408 |
+| gradient_boosting | 14.85 | 18.77 | 71.7% | N/A | 18408 |
 
 ## Simulated Betting ROI
 
 **baseline_avg224:** 65/100 (65.0%) | ROI: 24.09%
 **combined_pts_avg:** 59/89 (66.3%) | ROI: 26.56%
-**linear_ridge:** 61/89 (68.5%) | ROI: 30.85%
-**gradient_boosting:** 62/87 (71.3%) | ROI: 36.05%
+**linear_ridge:** 62/93 (66.7%) | ROI: 27.27%
+**gradient_boosting:** 64/94 (68.1%) | ROI: 29.98%
 
-## Top Predictive Features (XGBoost)
+## Top Predictive Features (Gradient Boosting)
 
-1. `math_total_projection`: 0.185 ██████████████████
-2. `pace_proxy_avg`: 0.099 █████████
-3. `h2h_total_avg`: 0.076 ███████
-4. `away_last5_pts_for`: 0.073 ███████
-5. `home_last5_pts_for`: 0.071 ███████
-6. `home_pts_against`: 0.066 ██████
-7. `away_net_rating`: 0.059 █████
-8. `away_pts_against`: 0.056 █████
-9. `home_pts_for`: 0.054 █████
-10. `net_rating_diff`: 0.054 █████
+1. `math_total_projection`: 0.600 ████████████████████████████████████████████████████████████
+2. `pace_proxy_avg`: 0.143 ██████████████
+3. `h2h_total_avg`: 0.031 ███
+4. `home_last5_pts_for`: 0.027 ██
+5. `away_last5_pts_for`: 0.025 ██
+6. `combined_pts_avg`: 0.023 ██
+7. `home_pts_against`: 0.019 █
+8. `home_net_rating`: 0.019 █
+9. `away_net_rating`: 0.016 █
+10. `away_pts_against`: 0.016 █
 
 ## Key Takeaways
 - MAE < 8 pts = model is useful for identifying value bets
 - Direction accuracy > 55% = edge over coin flip
+- Edge accuracy > 55% vs posted line = real betting value
 - ROI > 0% = model has real betting value
 
 ## Next Steps
-- Add injury impact scoring to features
-- Add betting line (open/close) as feature when available
+- Accumulate more games with odds data to improve edge accuracy signal
 - Add referee tendencies
 - Calibrate confidence intervals
+- Track line movement as a feature (sharp vs. square money signal)
