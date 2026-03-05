@@ -369,3 +369,76 @@ if __name__ == "__main__":
         for r in top5:
             print(f"   {r['player']} {r['prop_type'].upper()} {r['recommendation']} {r['line']} "
                   f"({r['confidence']*100:.0f}% conf, edge {r['edge']:+.1f})")
+
+
+# ── Live bet safety rules ────────────────────────────────────────────────────
+
+def check_live_ml_safety(lead: int, quarter: int, minutes_remaining: float) -> dict:
+    """
+    Check if a live ML bet is safe based on lead size and game situation.
+    Rule: Only recommend live ML if leading by 8+ at half, 12+ in Q3, 15+ in Q4.
+    
+    Returns: {safe: bool, threshold: int, recommendation: str}
+    """
+    thresholds = {2: 8, 3: 12, 4: 15}
+    threshold = thresholds.get(quarter, 8)
+    
+    if lead < 0:
+        return {"safe": False, "threshold": threshold,
+                "recommendation": f"Team is LOSING — no live ML",
+                "warning": "Never bet live ML on a team that is currently trailing"}
+    
+    if lead < threshold:
+        return {"safe": False, "threshold": threshold,
+                "recommendation": f"Lead of {lead} is below safe threshold ({threshold}+) for Q{quarter}",
+                "warning": f"Live ML requires {threshold}+ point lead in Q{quarter}. Current: {lead}"}
+    
+    return {"safe": True, "threshold": threshold,
+            "recommendation": f"Lead of {lead} clears threshold ({threshold}+) — ML is relatively safe",
+            "warning": None}
+
+
+def check_prop_minutes_risk(player_h1_minutes: float, prop_line: float,
+                             prop_type: str = "PRA") -> dict:
+    """
+    Check if a player's H1 minutes suggest minutes management risk.
+    Rule: If star played <65% of H1 minutes (< ~15.6 min), flag HIGH RISK for large props.
+    
+    Args:
+        player_h1_minutes: actual minutes played in first half
+        prop_line: the DK prop line (e.g. 39.5 PRA)
+        prop_type: pts/reb/ast/PRA
+    
+    Returns: risk assessment dict
+    """
+    h1_possible = 24.0  # 2 quarters × 12 min
+    pct = player_h1_minutes / h1_possible
+    
+    if pct < 0.65:  # played less than 65% of possible H1 minutes
+        return {
+            "risk": "HIGH",
+            "h1_minutes": player_h1_minutes,
+            "h1_pct": round(pct * 100),
+            "warning": (
+                f"⚠️  Player only played {player_h1_minutes:.0f}/{h1_possible:.0f} min in H1 "
+                f"({pct*100:.0f}%) — minutes management detected. "
+                f"Large prop ({prop_line} {prop_type}) is HIGH RISK."
+            ),
+            "recommendation": "PASS or significantly reduce confidence on large prop lines."
+        }
+    elif pct < 0.80:
+        return {
+            "risk": "MEDIUM",
+            "h1_minutes": player_h1_minutes,
+            "h1_pct": round(pct * 100),
+            "warning": f"Player played {player_h1_minutes:.0f}/{h1_possible:.0f} min in H1 ({pct*100:.0f}%) — moderate minutes.",
+            "recommendation": "Monitor closely. Prop is viable if coach commits to heavy Q3-Q4 usage."
+        }
+    else:
+        return {
+            "risk": "LOW",
+            "h1_minutes": player_h1_minutes,
+            "h1_pct": round(pct * 100),
+            "warning": None,
+            "recommendation": "Minutes usage is normal. Prop line is viable."
+        }

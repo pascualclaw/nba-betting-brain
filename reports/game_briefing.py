@@ -573,6 +573,33 @@ def format_briefing(
         lines.append("   No prop data available")
     lines.append("")
 
+    # ── ATS RISK FLAGS ───────────────────────────────
+    try:
+        from analyzers.variance_metrics import flag_ats_risk, compute_variance_metrics
+        today_str = game_date
+        spread_val = odds.get("spread") if odds else None
+        if spread_val is not None:
+            risk = flag_ats_risk(home, away, float(spread_val), today_str)
+            risk_emoji = {"LOW": "🟢", "MEDIUM": "🟡", "HIGH": "🔴"}.get(risk["risk_level"], "⚪")
+            lines.append(f"📊 ATS RISK ASSESSMENT")
+            lines.append(f"   {risk_emoji} {risk['risk_level']} (score: {risk['risk_score']}/10)")
+            for w in risk["warnings"][:4]:
+                lines.append(f"   {w}")
+            # Line movement if available
+            try:
+                from collectors.line_tracker import get_line_movement, get_sharp_flags
+                mv = get_line_movement(home, away, today_str)
+                if mv:
+                    direction_str = "🔥 SHARP ON UNDERDOG" if mv["direction"] == "toward_underdog" else "sharp on favorite"
+                    lines.append(f"   📈 Line moved {mv['spread_change']:+.1f} pts → {direction_str}")
+                    if mv.get("significant"):
+                        lines.append(f"   ⚠️  SIGNIFICANT line movement — fade public?")
+            except Exception:
+                pass
+            lines.append("")
+    except Exception:
+        pass
+
     # ── RECOMMENDATIONS ──────────────────────────────
     lines.append("🎯 RECOMMENDATIONS")
     total_line_val = recs.get("total_rec", {})
