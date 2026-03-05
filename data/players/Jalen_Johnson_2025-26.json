@@ -1,0 +1,123 @@
+{
+  "player_name": "Jalen Johnson",
+  "player_id": 1630552,
+  "season": "2025-26",
+  "n_games": 10,
+  "pts_avg": 22.1,
+  "reb_avg": 10.9,
+  "ast_avg": 8.1,
+  "pra_avg": 41.1,
+  "min_avg": 33.2,
+  "pts_std": 9.98,
+  "reb_std": 3.84,
+  "ast_std": 4.23,
+  "pra_std": 14.46,
+  "pts_last5": 17.4,
+  "reb_last5": 9.8,
+  "ast_last5": 5.6,
+  "pra_last5": 32.8,
+  "hit_rate": 0.8,
+  "games": [
+    {
+      "date": "Mar 01, 2026",
+      "matchup": "ATL vs. POR",
+      "wl": "W",
+      "minutes": 30.0,
+      "pts": 8,
+      "reb": 8,
+      "ast": 8,
+      "pra": 24
+    },
+    {
+      "date": "Feb 24, 2026",
+      "matchup": "ATL vs. WAS",
+      "wl": "W",
+      "minutes": 6.0,
+      "pts": 5,
+      "reb": 3,
+      "ast": 0,
+      "pra": 8
+    },
+    {
+      "date": "Feb 22, 2026",
+      "matchup": "ATL vs. BKN",
+      "wl": "W",
+      "minutes": 38.0,
+      "pts": 26,
+      "reb": 12,
+      "ast": 4,
+      "pra": 42
+    },
+    {
+      "date": "Feb 20, 2026",
+      "matchup": "ATL vs. MIA",
+      "wl": "L",
+      "minutes": 35.0,
+      "pts": 16,
+      "reb": 16,
+      "ast": 11,
+      "pra": 43
+    },
+    {
+      "date": "Feb 19, 2026",
+      "matchup": "ATL @ PHI",
+      "wl": "W",
+      "minutes": 38.0,
+      "pts": 32,
+      "reb": 10,
+      "ast": 5,
+      "pra": 47
+    },
+    {
+      "date": "Feb 11, 2026",
+      "matchup": "ATL @ CHA",
+      "wl": "L",
+      "minutes": 34.0,
+      "pts": 19,
+      "reb": 13,
+      "ast": 9,
+      "pra": 41
+    },
+    {
+      "date": "Feb 07, 2026",
+      "matchup": "ATL vs. CHA",
+      "wl": "L",
+      "minutes": 40.0,
+      "pts": 31,
+      "reb": 9,
+      "ast": 8,
+      "pra": 48
+    },
+    {
+      "date": "Feb 05, 2026",
+      "matchup": "ATL vs. UTA",
+      "wl": "W",
+      "minutes": 39.0,
+      "pts": 22,
+      "reb": 16,
+      "ast": 15,
+      "pra": 53
+    },
+    {
+      "date": "Feb 03, 2026",
+      "matchup": "ATL @ MIA",
+      "wl": "W",
+      "minutes": 36.0,
+      "pts": 29,
+      "reb": 11,
+      "ast": 11,
+      "pra": 51
+    },
+    {
+      "date": "Jan 31, 2026",
+      "matchup": "ATL @ IND",
+      "wl": "L",
+      "minutes": 36.0,
+      "pts": 33,
+      "reb": 11,
+      "ast": 10,
+      "pra": 54
+    }
+  ],
+  "_cached_at": 1772681834.21445
+}

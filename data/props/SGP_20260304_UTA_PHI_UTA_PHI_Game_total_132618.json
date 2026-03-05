@@ -1,0 +1,16 @@
+{
+  "prop_id": "SGP_20260304_UTA_PHI_UTA_PHI_Game_total_132618",
+  "game_code": "SGP_20260304_UTA_PHI",
+  "player": "UTA_PHI Game",
+  "prop_type": "total",
+  "line": 237.5,
+  "direction": "under",
+  "odds": -110,
+  "confidence": 0.62,
+  "reasoning": "PHI controls pace at home. UTA is bottom-5 offense. PHI blowout mode = garbage time = Under. SGP leg 2.",
+  "logged_at": "2026-03-04T13:26:18.565396",
+  "result": null,
+  "actual_value": null,
+  "hit": null,
+  "notes": null
+}

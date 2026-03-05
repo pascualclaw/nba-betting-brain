@@ -1,0 +1,16 @@
+{
+  "prop_id": "PARLAY_20260304_OKC_BOS_LAC_LA_Clippers_moneyline_132144",
+  "game_code": "PARLAY_20260304_OKC_BOS_LAC",
+  "player": "LA Clippers",
+  "prop_type": "moneyline",
+  "line": 0,
+  "direction": "over",
+  "odds": -650,
+  "confidence": 0.867,
+  "reasoning": "LAC ML vs IND. IND missing Haliburton, Siakam, Zubac (all OUT). Roster destroyed. 10:30pm ET.",
+  "logged_at": "2026-03-04T13:21:44.463071",
+  "result": null,
+  "actual_value": null,
+  "hit": null,
+  "notes": null
+}

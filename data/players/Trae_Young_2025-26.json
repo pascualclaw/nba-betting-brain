@@ -1,0 +1,123 @@
+{
+  "player_name": "Trae Young",
+  "player_id": 1629027,
+  "season": "2025-26",
+  "n_games": 10,
+  "pts_avg": 19.3,
+  "reb_avg": 1.5,
+  "ast_avg": 8.9,
+  "pra_avg": 29.7,
+  "min_avg": 27.9,
+  "pts_std": 9.66,
+  "reb_std": 1.18,
+  "ast_std": 4.72,
+  "pra_std": 11.59,
+  "pts_last5": 20.8,
+  "reb_last5": 1.0,
+  "ast_last5": 10.0,
+  "pra_last5": 31.8,
+  "hit_rate": 0.7,
+  "games": [
+    {
+      "date": "Dec 27, 2025",
+      "matchup": "ATL vs. NYK",
+      "wl": "L",
+      "minutes": 31.0,
+      "pts": 9,
+      "reb": 0,
+      "ast": 10,
+      "pra": 19
+    },
+    {
+      "date": "Dec 26, 2025",
+      "matchup": "ATL vs. MIA",
+      "wl": "L",
+      "minutes": 32.0,
+      "pts": 30,
+      "reb": 2,
+      "ast": 6,
+      "pra": 38
+    },
+    {
+      "date": "Dec 23, 2025",
+      "matchup": "ATL vs. CHI",
+      "wl": "L",
+      "minutes": 31.0,
+      "pts": 22,
+      "reb": 1,
+      "ast": 15,
+      "pra": 38
+    },
+    {
+      "date": "Dec 21, 2025",
+      "matchup": "ATL vs. CHI",
+      "wl": "L",
+      "minutes": 26.0,
+      "pts": 35,
+      "reb": 1,
+      "ast": 9,
+      "pra": 45
+    },
+    {
+      "date": "Dec 18, 2025",
+      "matchup": "ATL @ CHA",
+      "wl": "L",
+      "minutes": 20.0,
+      "pts": 8,
+      "reb": 1,
+      "ast": 10,
+      "pra": 19
+    },
+    {
+      "date": "Oct 29, 2025",
+      "matchup": "ATL @ BKN",
+      "wl": "W",
+      "minutes": 7.0,
+      "pts": 6,
+      "reb": 1,
+      "ast": 1,
+      "pra": 8
+    },
+    {
+      "date": "Oct 27, 2025",
+      "matchup": "ATL @ CHI",
+      "wl": "L",
+      "minutes": 34.0,
+      "pts": 21,
+      "reb": 3,
+      "ast": 17,
+      "pra": 41
+    },
+    {
+      "date": "Oct 25, 2025",
+      "matchup": "ATL vs. OKC",
+      "wl": "L",
+      "minutes": 30.0,
+      "pts": 15,
+      "reb": 4,
+      "ast": 10,
+      "pra": 29
+    },
+    {
+      "date": "Oct 24, 2025",
+      "matchup": "ATL @ ORL",
+      "wl": "W",
+      "minutes": 34.0,
+      "pts": 25,
+      "reb": 1,
+      "ast": 6,
+      "pra": 32
+    },
+    {
+      "date": "Oct 22, 2025",
+      "matchup": "ATL vs. TOR",
+      "wl": "L",
+      "minutes": 34.0,
+      "pts": 22,
+      "reb": 1,
+      "ast": 5,
+      "pra": 28
+    }
+  ],
+  "_cached_at": 1772681828.594528
+}

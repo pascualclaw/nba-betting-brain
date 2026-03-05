@@ -1,0 +1,38 @@
+{
+  "ticket_id": "DK639082452627798193",
+  "date": "2026-03-04",
+  "type": "3-Pick Parlay",
+  "boost": "+30% Parlay Boost",
+  "wager": 100.0,
+  "payout": 510.0,
+  "profit": 410.0,
+  "odds_boosted": "+410",
+  "odds_original": "+315",
+  "legs": [
+    {
+      "game": "OKC @ NYK",
+      "pick": "OKC -4.5",
+      "type": "Spread",
+      "time": "7:00 PM ET"
+    },
+    {
+      "game": "CHA @ BOS",
+      "pick": "BOS -6.5",
+      "type": "Spread",
+      "time": "7:30 PM ET"
+    },
+    {
+      "game": "IND @ LAC",
+      "pick": "LAC ML",
+      "type": "Moneyline",
+      "time": "10:30 PM ET"
+    }
+  ],
+  "prop_ids": [
+    "PARLAY_20260304_OKC_BOS_LAC_OKC_Thunder_spread_132144",
+    "PARLAY_20260304_OKC_BOS_LAC_BOS_Celtics_spread_132144",
+    "PARLAY_20260304_OKC_BOS_LAC_LA_Clippers_moneyline_132144"
+  ],
+  "status": "PENDING",
+  "notes": "Option C from Jarvis analysis. 30% DK boost applied. 3-leg spread+ML parlay."
+}

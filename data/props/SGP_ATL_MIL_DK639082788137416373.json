@@ -1,0 +1,23 @@
+{
+  "ticket_id": "DK639082788137416373",
+  "date": "2026-03-04",
+  "type": "SGP 2-Pick Parlay",
+  "wager": 232.0,
+  "payout": 452.95,
+  "profit": 220.95,
+  "odds": "-105",
+  "game": "ATL @ MIL",
+  "time": "Live - Half",
+  "giannis_at_bet": 22,
+  "giannis_line": 39.5,
+  "needs_more": 17.5,
+  "legs": [
+    {
+      "pick": "MIL ML Live"
+    },
+    {
+      "pick": "Giannis 40+ PRA Live"
+    }
+  ],
+  "notes": "Funded by PHI SGP payout ($232). Giannis on pace for 50+ PRA."
+}

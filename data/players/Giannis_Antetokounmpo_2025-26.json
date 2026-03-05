@@ -1,0 +1,123 @@
+{
+  "player_name": "Giannis Antetokounmpo",
+  "player_id": 203507,
+  "season": "2025-26",
+  "n_games": 10,
+  "pts_avg": 25.0,
+  "reb_avg": 10.3,
+  "ast_avg": 5.0,
+  "pra_avg": 40.3,
+  "min_avg": 29.8,
+  "pts_std": 6.58,
+  "reb_std": 3.71,
+  "ast_std": 3.09,
+  "pra_std": 8.04,
+  "pts_last5": 20.4,
+  "reb_last5": 12.0,
+  "ast_last5": 4.6,
+  "pra_last5": 37.0,
+  "hit_rate": 0.7,
+  "games": [
+    {
+      "date": "Mar 02, 2026",
+      "matchup": "MIL vs. BOS",
+      "wl": "L",
+      "minutes": 25.0,
+      "pts": 19,
+      "reb": 11,
+      "ast": 2,
+      "pra": 32
+    },
+    {
+      "date": "Jan 23, 2026",
+      "matchup": "MIL vs. DEN",
+      "wl": "L",
+      "minutes": 32.0,
+      "pts": 22,
+      "reb": 13,
+      "ast": 7,
+      "pra": 42
+    },
+    {
+      "date": "Jan 21, 2026",
+      "matchup": "MIL vs. OKC",
+      "wl": "L",
+      "minutes": 31.0,
+      "pts": 19,
+      "reb": 14,
+      "ast": 7,
+      "pra": 40
+    },
+    {
+      "date": "Jan 19, 2026",
+      "matchup": "MIL @ ATL",
+      "wl": "W",
+      "minutes": 30.0,
+      "pts": 21,
+      "reb": 17,
+      "ast": 6,
+      "pra": 44
+    },
+    {
+      "date": "Jan 15, 2026",
+      "matchup": "MIL @ SAS",
+      "wl": "L",
+      "minutes": 22.0,
+      "pts": 21,
+      "reb": 5,
+      "ast": 1,
+      "pra": 27
+    },
+    {
+      "date": "Jan 13, 2026",
+      "matchup": "MIL vs. MIN",
+      "wl": "L",
+      "minutes": 31.0,
+      "pts": 25,
+      "reb": 8,
+      "ast": 5,
+      "pra": 38
+    },
+    {
+      "date": "Jan 11, 2026",
+      "matchup": "MIL @ DEN",
+      "wl": "L",
+      "minutes": 33.0,
+      "pts": 31,
+      "reb": 8,
+      "ast": 11,
+      "pra": 50
+    },
+    {
+      "date": "Jan 09, 2026",
+      "matchup": "MIL @ LAL",
+      "wl": "W",
+      "minutes": 31.0,
+      "pts": 21,
+      "reb": 6,
+      "ast": 5,
+      "pra": 32
+    },
+    {
+      "date": "Jan 07, 2026",
+      "matchup": "MIL @ GSW",
+      "wl": "L",
+      "minutes": 31.0,
+      "pts": 34,
+      "reb": 10,
+      "ast": 5,
+      "pra": 49
+    },
+    {
+      "date": "Jan 04, 2026",
+      "matchup": "MIL @ SAC",
+      "wl": "W",
+      "minutes": 32.0,
+      "pts": 37,
+      "reb": 11,
+      "ast": 1,
+      "pra": 49
+    }
+  ],
+  "_cached_at": 1772681832.4695418
+}

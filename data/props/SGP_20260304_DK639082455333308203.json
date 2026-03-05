@@ -1,0 +1,27 @@
+{
+  "ticket_id": "DK639082455333308203",
+  "date": "2026-03-04",
+  "type": "SGP 2-Pick Parlay",
+  "wager": 100.0,
+  "payout": 232.0,
+  "profit": 132.0,
+  "odds": "+132",
+  "game": "UTA @ PHI",
+  "time": "7:30 PM ET",
+  "legs": [
+    {
+      "pick": "PHI 76ers ML",
+      "type": "Moneyline"
+    },
+    {
+      "pick": "Under 237.5",
+      "type": "Total"
+    }
+  ],
+  "prop_ids": [
+    "SGP_20260304_UTA_PHI_PHI_76ers_moneyline_132618",
+    "SGP_20260304_UTA_PHI_UTA_PHI_Game_total_132618"
+  ],
+  "status": "PENDING",
+  "notes": "SGP \u2014 correlated positively: PHI blowout \u2192 garbage time \u2192 Under hits."
+}

@@ -1,0 +1,123 @@
+{
+  "player_name": "Brook Lopez",
+  "player_id": 201572,
+  "season": "2025-26",
+  "n_games": 10,
+  "pts_avg": 10.6,
+  "reb_avg": 5.1,
+  "ast_avg": 1.8,
+  "pra_avg": 17.5,
+  "min_avg": 29.8,
+  "pts_std": 4.43,
+  "reb_std": 3.03,
+  "ast_std": 0.92,
+  "pra_std": 6.85,
+  "pts_last5": 11.2,
+  "reb_last5": 6.2,
+  "ast_last5": 1.8,
+  "pra_last5": 19.2,
+  "hit_rate": 0.6,
+  "games": [
+    {
+      "date": "Mar 02, 2026",
+      "matchup": "LAC @ GSW",
+      "wl": "W",
+      "minutes": 24.0,
+      "pts": 6,
+      "reb": 4,
+      "ast": 2,
+      "pra": 12
+    },
+    {
+      "date": "Mar 01, 2026",
+      "matchup": "LAC vs. NOP",
+      "wl": "W",
+      "minutes": 26.0,
+      "pts": 16,
+      "reb": 7,
+      "ast": 3,
+      "pra": 26
+    },
+    {
+      "date": "Feb 26, 2026",
+      "matchup": "LAC vs. MIN",
+      "wl": "L",
+      "minutes": 32.0,
+      "pts": 8,
+      "reb": 6,
+      "ast": 2,
+      "pra": 16
+    },
+    {
+      "date": "Feb 22, 2026",
+      "matchup": "LAC vs. ORL",
+      "wl": "L",
+      "minutes": 22.0,
+      "pts": 10,
+      "reb": 4,
+      "ast": 1,
+      "pra": 15
+    },
+    {
+      "date": "Feb 20, 2026",
+      "matchup": "LAC @ LAL",
+      "wl": "L",
+      "minutes": 35.0,
+      "pts": 16,
+      "reb": 10,
+      "ast": 1,
+      "pra": 27
+    },
+    {
+      "date": "Feb 19, 2026",
+      "matchup": "LAC vs. DEN",
+      "wl": "W",
+      "minutes": 31.0,
+      "pts": 8,
+      "reb": 6,
+      "ast": 2,
+      "pra": 16
+    },
+    {
+      "date": "Feb 11, 2026",
+      "matchup": "LAC @ HOU",
+      "wl": "W",
+      "minutes": 37.0,
+      "pts": 15,
+      "reb": 1,
+      "ast": 3,
+      "pra": 19
+    },
+    {
+      "date": "Feb 10, 2026",
+      "matchup": "LAC @ HOU",
+      "wl": "L",
+      "minutes": 29.0,
+      "pts": 7,
+      "reb": 2,
+      "ast": 0,
+      "pra": 9
+    },
+    {
+      "date": "Feb 08, 2026",
+      "matchup": "LAC @ MIN",
+      "wl": "W",
+      "minutes": 26.0,
+      "pts": 5,
+      "reb": 2,
+      "ast": 2,
+      "pra": 9
+    },
+    {
+      "date": "Feb 06, 2026",
+      "matchup": "LAC @ SAC",
+      "wl": "W",
+      "minutes": 36.0,
+      "pts": 15,
+      "reb": 9,
+      "ast": 2,
+      "pra": 26
+    }
+  ],
+  "_cached_at": 1772681836.057465
+}

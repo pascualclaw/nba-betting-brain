@@ -1,0 +1,46 @@
+{
+  "injury_score": 34.44,
+  "injured_players": [
+    {
+      "player": "Lauri Markkanen",
+      "status": "out",
+      "severity_weight": 1.0,
+      "avg_pts": 6.9,
+      "pts_share": 0.06,
+      "impact": 6.89
+    },
+    {
+      "player": "Vince Williams Jr.",
+      "status": "out",
+      "severity_weight": 1.0,
+      "avg_pts": 6.9,
+      "pts_share": 0.06,
+      "impact": 6.89
+    },
+    {
+      "player": "Jusuf Nurkic",
+      "status": "out",
+      "severity_weight": 1.0,
+      "avg_pts": 6.9,
+      "pts_share": 0.06,
+      "impact": 6.89
+    },
+    {
+      "player": "Jaren Jackson Jr.",
+      "status": "out",
+      "severity_weight": 1.0,
+      "avg_pts": 6.9,
+      "pts_share": 0.06,
+      "impact": 6.89
+    },
+    {
+      "player": "Walker Kessler",
+      "status": "out",
+      "severity_weight": 1.0,
+      "avg_pts": 6.9,
+      "pts_share": 0.06,
+      "impact": 6.89
+    }
+  ],
+  "team_avg_pts": 114.8
+}
