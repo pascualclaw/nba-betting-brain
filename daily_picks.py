@@ -59,6 +59,7 @@ log = logging.getLogger(__name__)
 
 PROJECT_ROOT = Path(__file__).parent
 MODEL_PATH = PROJECT_ROOT / "models" / "saved" / "latest.pkl"
+SPREAD_MODEL_PATH = PROJECT_ROOT / "models" / "saved" / "spread_latest.pkl"
 DB_PATH = PROJECT_ROOT / "data" / "nba_betting.db"
 DATA_DIR = PROJECT_ROOT / "data"
 
@@ -182,10 +183,19 @@ def _name_to_tri(name: str) -> Optional[str]:
 # ── ML Model Projection ────────────────────────────────────────────────────
 
 def load_model():
-    """Load the trained gradient boosting model."""
+    """Load the trained totals gradient boosting model."""
     if not MODEL_PATH.exists():
         raise FileNotFoundError(f"Model not found: {MODEL_PATH}")
     with open(MODEL_PATH, "rb") as f:
+        bundle = pickle.load(f)
+    return bundle["model"], bundle.get("feature_cols", [])
+
+
+def load_spread_model():
+    """Load the trained spread model."""
+    if not SPREAD_MODEL_PATH.exists():
+        return None, []
+    with open(SPREAD_MODEL_PATH, "rb") as f:
         bundle = pickle.load(f)
     return bundle["model"], bundle.get("feature_cols", [])
 
@@ -358,6 +368,71 @@ def remove_vig(prob_over: float, prob_under: float) -> tuple:
     total = prob_over + prob_under
     return prob_over / total, prob_under / total
 
+def spread_project(home: str, away: str, spread_model, spread_feature_cols: list) -> Optional[float]:
+    """Run spread model projection. Returns predicted home margin."""
+    try:
+        h = get_team_features(home)
+        a = get_team_features(away)
+        if not h or not a:
+            return None
+
+        row = {
+            "home_pts_for": h["pts_for_avg"],
+            "home_pts_against": h["pts_against_avg"],
+            "home_net_rating": h["net_rating"],
+            "home_win_pct": h["win_pct"],
+            "home_last5_pts_for": h["last5_pts_for"],
+            "away_pts_for": a["pts_for_avg"],
+            "away_pts_against": a["pts_against_avg"],
+            "away_net_rating": a["net_rating"],
+            "away_win_pct": a["win_pct"],
+            "away_last5_pts_for": a["last5_pts_for"],
+            "net_rating_diff": round(h["net_rating"] - a["net_rating"], 2),
+            "win_pct_diff": round(h["win_pct"] - a["win_pct"], 3),
+            "pts_for_diff": round(h["pts_for_avg"] - a["pts_for_avg"], 1),
+            "pts_against_diff": round(h["pts_against_avg"] - a["pts_against_avg"], 1),
+            "rest_diff": 0,  # would need live schedule data
+            "home_b2b": 0,
+            "away_b2b": 0,
+            # Home/away splits (use net rating as proxy when splits unavailable)
+            "home_home_ortg": h["pts_for_avg"] + 2.0,   # home teams score more at home
+            "home_away_ortg": h["pts_for_avg"] - 2.0,
+            "away_home_ortg": a["pts_for_avg"] + 2.0,
+            "away_away_ortg": a["pts_for_avg"] - 2.0,
+            "home_home_drtg": h["pts_against_avg"] - 1.5,
+            "home_away_drtg": h["pts_against_avg"] + 1.5,
+            "away_home_drtg": a["pts_against_avg"] - 1.5,
+            "away_away_drtg": a["pts_against_avg"] + 1.5,
+            "home_home_win_pct": min(1.0, h["win_pct"] + 0.08),
+            "away_away_win_pct": max(0.0, a["win_pct"] - 0.08),
+            "h2h_total_avg": 224.0,
+            "h2h_games": 0,
+            "home_injury_impact": 0.0,
+            "away_injury_impact": 0.0,
+            "open_spread": 0.0,  # unknown pre-game; model learned to ignore when 0
+        }
+
+        available = [c for c in spread_feature_cols if c in row]
+        X = pd.DataFrame([{c: row.get(c, 0) for c in available}]).fillna(0)
+        pred_margin = float(spread_model.predict(X)[0])
+        return round(pred_margin, 1)
+
+    except Exception as e:
+        log.error(f"Spread projection failed: {e}")
+        return None
+
+
+def model_prob_spread(market_spread: float, model_margin: float, sigma: float = 14.2) -> tuple:
+    """
+    Probability of home covering the spread.
+    sigma=14.2 = historical std dev of NBA margins.
+    """
+    from scipy.stats import norm
+    p_home_covers = 1 - norm.cdf(market_spread, loc=model_margin, scale=sigma)
+    p_away_covers = norm.cdf(market_spread, loc=model_margin, scale=sigma)
+    return p_home_covers, p_away_covers
+
+
 def model_prob_total(market_line: float, model_total: float, sigma: float = 18.0) -> tuple:
     p_over = 1 - scipy_norm.cdf(market_line, loc=model_total, scale=sigma)
     p_under = scipy_norm.cdf(market_line, loc=model_total, scale=sigma)
@@ -382,12 +457,18 @@ def ev_and_kelly(p_win: float, odds: float = -110, bankroll: float = 500, kelly_
 
 def generate_picks(game_date: Optional[str] = None, single_game: Optional[tuple] = None) -> List[Dict]:
     """Generate ranked picks for tonight's slate."""
-    log.info("Loading model...")
+    log.info("Loading models...")
     try:
         model, feature_cols = load_model()
     except Exception as e:
-        log.error(f"Model load failed: {e}")
+        log.error(f"Totals model load failed: {e}")
         model, feature_cols = None, []
+
+    spread_model, spread_feature_cols = load_spread_model()
+    if spread_model:
+        log.info("Spread model loaded ✅")
+    else:
+        log.warning("Spread model not found — spread picks disabled")
 
     log.info("Fetching slate...")
     if single_game:
@@ -416,11 +497,17 @@ def generate_picks(game_date: Optional[str] = None, single_game: Optional[tuple]
             "tip_time": game.get("status", ""),
         }
 
-        # ── ML projection ──
+        # ── ML projection (totals) ──
         ml_total = None
         if model:
             ml_total = ml_project(home, away, model, feature_cols)
         result["ml_total"] = ml_total
+
+        # ── Spread projection ──
+        ml_margin = None
+        if spread_model:
+            ml_margin = spread_project(normalize_tri(home), normalize_tri(away), spread_model, spread_feature_cols)
+        result["ml_margin"] = ml_margin  # positive = home favored
 
         # ── Possessions projection ──
         try:
@@ -479,6 +566,49 @@ def generate_picks(game_date: Optional[str] = None, single_game: Optional[tuple]
 
         # ── EV analysis ──
         bets = []
+
+        # Spread EV
+        # market_spread convention: negative = home favored (e.g., -5.5 = home -5.5)
+        # ml_margin: positive = home wins by X, negative = away wins by X
+        # coverage_edge: how much model margin exceeds what home needs to cover
+        #   coverage_edge = ml_margin - (-market_spread) = ml_margin + market_spread
+        #   positive = model thinks home covers; negative = model thinks away covers
+        if ml_margin is not None and market_spread is not None:
+            coverage_edge = ml_margin + market_spread  # positive = home covers
+            if abs(coverage_edge) > 2.5:  # require meaningful edge
+                # Use market_spread as the cover line (home needs to win by -market_spread)
+                cover_line = -market_spread  # positive = home must win by this much
+                p_home, p_away = model_prob_spread(cover_line, ml_margin)
+                if coverage_edge > 0:  # model says home covers
+                    ev = ev_and_kelly(p_home, odds=-110, bankroll=500)
+                    direction = f"{home} {market_spread:+.1f}"
+                    if ev["recommended"]:
+                        bets.append({
+                            "type": "SPREAD",
+                            "direction": direction,
+                            "line": market_spread,
+                            "model_proj": ml_margin,
+                            "edge_pts": round(coverage_edge, 1),
+                            "ev_pct": ev["ev_pct"],
+                            "kelly_bet": ev["kelly_bet"],
+                            "confidence": "HIGH" if abs(coverage_edge) > 5 else "MEDIUM",
+                        })
+                else:  # model says away covers
+                    ev = ev_and_kelly(p_away, odds=-110, bankroll=500)
+                    away_spread = -market_spread
+                    direction = f"{away} {away_spread:+.1f}"
+                    if ev["recommended"]:
+                        bets.append({
+                            "type": "SPREAD",
+                            "direction": direction,
+                            "line": away_spread,
+                            "model_proj": ml_margin,
+                            "edge_pts": round(coverage_edge, 1),
+                            "ev_pct": ev["ev_pct"],
+                            "kelly_bet": ev["kelly_bet"],
+                            "confidence": "HIGH" if abs(coverage_edge) > 5 else "MEDIUM",
+                        })
+
         if result["consensus_total"] and market_total:
             edge = result["consensus_total"] - market_total
             p_over, p_under = model_prob_total(market_total, result["consensus_total"])
@@ -548,13 +678,21 @@ def print_picks(picks: List[Dict]):
             print(f"  👨‍⚖️ Refs: [{ref['tier']}] {ref.get('note', '')}")
 
         # Bets
+        if p.get("ml_margin") is not None:
+            margin = p["ml_margin"]
+            print(f"  📐 Spread model: {home} by {margin:+.1f} pts", end="")
+            if p.get("market_spread") is not None:
+                print(f" (market: {home} {p['market_spread']:+.1f})", end="")
+            print()
+
         if p["bets"]:
             has_bets = True
             for bet in p["bets"]:
                 conf_icon = "🔥" if bet["confidence"] == "HIGH" else "✅"
-                print(f"\n  {conf_icon} BET: {bet['direction']} {bet['line']}")
+                bet_type = f"[{bet['type']}]" if "type" in bet else ""
+                print(f"\n  {conf_icon} BET {bet_type}: {bet['direction']}")
                 print(f"     EV: {bet['ev_pct']:+.1f}% | Kelly: ${bet['kelly_bet']:.0f} (on $500 bankroll)")
-                print(f"     Model {bet['model_proj']} vs Market {bet['line']} → {bet['edge_pts']:+.1f} pts edge")
+                print(f"     Model {bet['model_proj']:+.1f} vs Market {bet['line']:+.1f} → {bet['edge_pts']:+.1f} pts edge")
         else:
             print(f"  ⛔ No bet (EV < 3% threshold)")
 
@@ -580,11 +718,12 @@ def picks_to_discord(picks: List[Dict]) -> str:
             home, away = p["home"], p["away"]
             for bet in p["bets"]:
                 conf = "🔥" if bet["confidence"] == "HIGH" else "✅"
+                bet_label = f"[{bet.get('type','TOTAL')}] " if bet.get("type") else ""
                 lines.append(
-                    f"{conf} **{away} @ {home}** — {bet['direction']} {bet['line']}"
+                    f"{conf} **{away} @ {home}** — {bet_label}{bet['direction']}"
                     f" | EV {bet['ev_pct']:+.1f}% | Kelly ${bet['kelly_bet']:.0f}"
                 )
-                lines.append(f"   Model: {bet['model_proj']} vs Market: {bet['line']} ({bet['edge_pts']:+.1f} pts edge)")
+                lines.append(f"   Model: {bet['model_proj']:+.1f} vs Market: {bet['line']:+.1f} ({bet['edge_pts']:+.1f} pts edge)")
             # Flags
             mot = p.get("motivation", {})
             for f in mot.get("flags", []):

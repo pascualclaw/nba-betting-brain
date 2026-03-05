@@ -41,3 +41,12 @@
 - Add referee tendencies
 - Calibrate confidence intervals
 - Track line movement as a feature (sharp vs. square money signal)
+## Spread Model — v20260305_1157
+
+| Model | MAE | Direction | ATS Acc | Win Rate | ROI |
+|-------|-----|-----------|---------|----------|-----|
+| ridge | 10.32 pts | 65.4% | N/A | 67.2% | 28.3% |
+| hist_gb | 10.36 pts | 64.6% | N/A | 66.6% | 27.2% |
+
+**Top features:** net_rating_diff, home_net_rating, win_pct_diff, away_last5_pts_for, away_net_rating
+**Home court average:** +2.3 pts
