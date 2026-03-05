@@ -9,6 +9,16 @@ DATA_DIR = ROOT / "data"
 
 # NBA seasons to load (most recent first)
 ALL_SEASONS = [
+    "2010-11",
+    "2011-12",
+    "2012-13",
+    "2013-14",
+    "2014-15",
+    "2015-16",
+    "2016-17",
+    "2017-18",
+    "2018-19",
+    "2019-20",
     "2020-21",
     "2021-22",
     "2022-23",
@@ -21,7 +31,7 @@ ALL_SEASONS = [
 CURRENT_SEASON = "2025-26"
 
 # Seasons for training (default)
-SEASONS = ALL_SEASONS[-5:]  # last 5 seasons
+SEASONS = ALL_SEASONS  # all 15 seasons (2010-11 through 2025-26)
 
 # API settings
 NBA_API_DELAY = 0.6  # seconds between requests (rate limit)
