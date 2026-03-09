@@ -280,7 +280,7 @@ def get_h2h_from_history(home: str, away: str, team_history: dict, window: int =
     }
 
 
-def build_features(game: dict, snapshot: dict) -> dict:
+def build_features(game: dict, snapshot: dict, conn: sqlite3.Connection = None) -> dict:
     """Convert a game + snapshot into ML feature vector."""
     h = snapshot["home_stats"]
     a = snapshot["away_stats"]
@@ -315,7 +315,7 @@ def build_features(game: dict, snapshot: dict) -> dict:
         (away_momentum - home_momentum) * 0.5         # recency adjustment
     )
 
-    return {
+    feats = {
         # Team quality features
         "home_pts_for": h["pts_for_avg"],
         "home_pts_against": h["pts_against_avg"],
@@ -387,6 +387,46 @@ def build_features(game: dict, snapshot: dict) -> dict:
         "actual_home_margin": game.get("home_margin", 0),
         "home_won": 1 if game["winner"] == game["home"] else 0,
     }
+
+    # ── Team O/U Rate Features ──────────────────────────────────────────
+    # Requires a live DB connection; graceful fallback to None when unavailable
+    if conn is not None:
+        try:
+            from analyzers.team_ou_rates import get_team_ou_features
+            game_date = game.get("date", "2000-01-01")
+            home_team = game.get("home", "")
+            away_team = game.get("away", "")
+
+            home_ou = get_team_ou_features(home_team, game_date, conn, n=30)
+            away_ou = get_team_ou_features(away_team, game_date, conn, n=30)
+
+            feats["home_ou_rate"] = home_ou["home_ou_rate"]
+            feats["away_ou_rate"] = away_ou["away_ou_rate"]
+            feats["home_avg_total"] = home_ou["avg_game_total"]
+            feats["away_avg_total"] = away_ou["avg_game_total"]
+            feats["home_defensive_suppression"] = home_ou["defensive_suppression"]
+            feats["away_defensive_suppression"] = away_ou["defensive_suppression"]
+        except Exception as _e:
+            log.debug(f"O/U rate features unavailable: {_e}")
+            feats.update({
+                "home_ou_rate": None,
+                "away_ou_rate": None,
+                "home_avg_total": None,
+                "away_avg_total": None,
+                "home_defensive_suppression": None,
+                "away_defensive_suppression": None,
+            })
+    else:
+        feats.update({
+            "home_ou_rate": None,
+            "away_ou_rate": None,
+            "home_avg_total": None,
+            "away_avg_total": None,
+            "home_defensive_suppression": None,
+            "away_defensive_suppression": None,
+        })
+
+    return feats
 
 
 def add_home_away_split_features(features: dict, game: dict,
@@ -523,7 +563,8 @@ def build_and_store_snapshots(all_games: list, conn: sqlite3.Connection):
 
 
 def build_feature_dataset(all_games: list, snapshots: dict,
-                           home_away_splits: dict = None) -> pd.DataFrame:
+                           home_away_splits: dict = None,
+                           conn: sqlite3.Connection = None) -> pd.DataFrame:
     """Build the full ML feature dataset from all games and snapshots.
 
     Args:
@@ -553,7 +594,7 @@ def build_feature_dataset(all_games: list, snapshots: dict,
         snap = snapshots[gid]
         if snap["home_stats"]["games"] < 5 or snap["away_stats"]["games"] < 5:
             continue
-        features = build_features(game, snap)
+        features = build_features(game, snap, conn=conn)
         # Enrich with home/away splits
         features = add_home_away_split_features(features, game, home_away_splits or {})
         features["game_id"] = gid
@@ -657,7 +698,7 @@ if __name__ == "__main__":
     conn = get_connection()
     all_games = load_and_store_seasons(seasons_to_load, conn)
     snapshots = build_and_store_snapshots(all_games, conn)
-    df = build_feature_dataset(all_games, snapshots)
+    df = build_feature_dataset(all_games, snapshots, conn=conn)
     df = join_odds_to_features(df)
 
     output_path = Path(__file__).parent.parent / "data" / "training_features.csv"

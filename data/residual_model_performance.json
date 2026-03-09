@@ -1,0 +1,9 @@
+{
+  "saved_at": "2026-03-09T08:53:45.981265",
+  "best_model": "Ridge",
+  "holdout_mae": 15.0527,
+  "n_train_games": 18708,
+  "n_features": 39,
+  "walk_forward_ridge_mae": 14.8549,
+  "walk_forward_hgb_mae": 14.9933
+}
