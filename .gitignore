@@ -16,3 +16,4 @@ models/saved/*.pkl
 # Keep directory structure
 !models/saved/.gitkeep
 !data/.gitkeep
+.github/
