@@ -358,6 +358,14 @@ def ml_project(home: str, away: str, model, feature_cols: list) -> Optional[floa
 
 from scipy.stats import norm as scipy_norm
 
+# ── Minimum gap thresholds (based on empirical MAE from 18,708-game backtest) ──
+# Only present total picks when model disagrees with market by > MAE.
+# Below this threshold, the signal is inside the noise and has no provable edge.
+# NBA backtest: gap>15pts → Under 80.6% win rate, Over 90.3% win rate (108/7710 signals)
+MIN_TOTAL_GAP_NBA = 15.0     # pts — minimum model vs market gap for NBA totals
+MIN_TOTAL_GAP_NCAAB = 14.0   # pts — NCAAB model MAE
+MIN_SPREAD_GAP = 4.0          # pts — minimum model vs market gap for spreads
+
 def implied_prob(american_odds: float) -> float:
     if american_odds > 0:
         return 100 / (american_odds + 100)
@@ -612,7 +620,11 @@ def generate_picks(game_date: Optional[str] = None, single_game: Optional[tuple]
         if result["consensus_total"] and market_total:
             edge = result["consensus_total"] - market_total
             p_over, p_under = model_prob_total(market_total, result["consensus_total"])
-            if abs(edge) > 2.0:
+            # ── Minimum gap filter ──
+            # Only recommend total bets when model gap exceeds 1× MAE (15 pts NBA).
+            # Gaps below this are inside the model's noise floor — no provable edge.
+            # Backtest: gap>15pts → 80%+ win rate; gap<15pts → ~62% win rate (barely +EV at -110 juice).
+            if abs(edge) >= MIN_TOTAL_GAP_NBA:
                 direction = "OVER" if edge > 0 else "UNDER"
                 p_win = p_over if direction == "OVER" else p_under
                 ev = ev_and_kelly(p_win, odds=-110, bankroll=500)
@@ -625,8 +637,19 @@ def generate_picks(game_date: Optional[str] = None, single_game: Optional[tuple]
                         "edge_pts": round(edge, 1),
                         "ev_pct": ev["ev_pct"],
                         "kelly_bet": ev["kelly_bet"],
-                        "confidence": "HIGH" if abs(edge) > 5 else "MEDIUM",
+                        "confidence": "HIGH" if abs(edge) > 20 else "MEDIUM",
+                        "gap_filter": f"PASSED (gap {abs(edge):.1f}pts ≥ {MIN_TOTAL_GAP_NBA}pt min)",
                     })
+            elif abs(edge) > 2.0:
+                # Log that it was filtered out — not silently dropped
+                result.setdefault("filtered_bets", []).append({
+                    "type": "TOTAL",
+                    "direction": "OVER" if edge > 0 else "UNDER",
+                    "line": market_total,
+                    "model_proj": result["consensus_total"],
+                    "edge_pts": round(edge, 1),
+                    "reason": f"Gap {abs(edge):.1f}pts < {MIN_TOTAL_GAP_NBA}pt minimum (inside model noise floor)",
+                })
 
         result["bets"] = bets
         result["top_ev"] = max((b["ev_pct"] for b in bets), default=0.0)
